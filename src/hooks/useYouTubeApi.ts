@@ -11,33 +11,34 @@ export const useTrendingVideos = () => {
     ['trendingVideos'], 
     () => fetchTrendingVideos(),
     {
-      staleTime: 1000 * 60 * 5, // 5 minutes
+      staleTime: 1000 * 60 * 5,
       refetchOnWindowFocus: false,
     }
   );
 };
+export const useSearchVideos = (query: string) => {
+    return useQuery(
+        ['searchVideos', query],
+        () => searchVideos(query),
+        {
+            enabled: !!query && query.length > 1,
+            staleTime: 1000 * 60 * 1,
+        }
+    );
+};
+
 
 export const useTrendingMusicVideos = () => {
   return useQuery(
     ['trendingMusicVideos'], 
     () => fetchTrendingMusicVideos(),
     {
-      staleTime: 1000 * 60 * 5, // 5 minutes
+      staleTime: 1000 * 60 * 5,
       refetchOnWindowFocus: false,
     }
   );
 };
 
-export const useSearchVideos = (query: string) => {
-  return useQuery(
-    ['searchVideos', query],
-    () => searchVideos(query),
-    {
-      enabled: !!query && query.length > 1,
-      staleTime: 1000 * 60 * 1, // 1 minute
-    }
-  );
-};
 
 export const useVideoDetails = (videoId: string | null) => {
   return useQuery(
@@ -45,7 +46,7 @@ export const useVideoDetails = (videoId: string | null) => {
     () => videoId ? getVideoById(videoId) : null,
     {
       enabled: !!videoId,
-      staleTime: 1000 * 60 * 5, // 5 minutes
+      staleTime: 1000 * 60 * 5,
     }
   );
 };
