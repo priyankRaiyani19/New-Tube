@@ -20,39 +20,35 @@ const VideoSection: React.FC<VideoGridProps> = ({
                                                     error,
                                                 }) => {
     return (
-        <section>
+        <div>
             <h2 className="text-xl font-bold mb-4 text-white">{title}</h2>
 
-            {isError && (
-                <ErrorState
-                    message={`Failed to load videos`}
-                    error={error}
-                />
-            )}
-
-            {!isLoading && (
-                <div className="space-y-4">
-                    {[...Array(4)].map((_, index) => (
-                        <LoadingSkeleton key={index}/>
-                    ))}
-                </div>
-            )}
-
-            {!isLoading && !isError && videos && videos.length > 0 && (
-                <div className="space-y-4">
-                    {videos.map((video) => (
-                        <VideoCard
-                            key={typeof video.id === 'string' ? video.id : video.id.videoId}
-                            video={video}
-                        />
-                    ))}
-                </div>
-            )}
-
-            {!isLoading && !isError && (!videos || videos.length === 0) && (
-                <p className="text-gray-400 text-center py-10">No videos found</p>
-            )}
-        </section>
+            {isError ? (
+                    <ErrorState
+                        message={`Failed to load videos`}
+                        error={error}
+                    />
+                ) :
+                isLoading ? (
+                        <div className="space-y-4">
+                            {[...Array(4)].map((_, index) => (
+                                <LoadingSkeleton key={index}/>
+                            ))}
+                        </div>
+                    ) :
+                    videos ? (
+                        <div className="space-y-4">
+                            {videos.map((video) => (
+                                <VideoCard
+                                    key={typeof video.id === 'string' ? video.id : video.id.videoId}
+                                    video={video}
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="text-gray-400 text-center py-10">No videos found</p>
+                    )}
+        </div>
     );
 };
 

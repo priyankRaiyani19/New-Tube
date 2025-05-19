@@ -30,7 +30,7 @@ const Navbar: React.FC<NavbarProps> = ({onSearch}) => {
                 <div className="flex items-center">
                     <div className="flex-shrink-0 flex items-center">
                         <MdOutlineOndemandVideo size={28} className="text-primary mr-2"/>
-                        <span className="text-white font-bold text-xl">NewTube</span>
+                        <div className="text-white font-bold text-xl">Music Tube</div>
                     </div>
                 </div>
 
