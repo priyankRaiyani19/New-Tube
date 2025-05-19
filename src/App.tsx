@@ -33,13 +33,13 @@ function MainContent() {
         <div className="min-h-screen bg-background w-full">
             <Navbar onSearch={handleSearch}/>
 
-            <div className="w-full mx-auto px-4 py-6 flex  gap-6">
+            <div className="w-full mx-auto px-4 py-6 flex md:flex-row flex-col  gap-6">
 
                 <div className="w-full h-full">
                     <VideoPlayer/>
                 </div>
 
-                <div className="lg:col-span-4 space-y-6">
+                <div className=" space-y-6">
                     <VideoSection
                         title={searchQuery ? `Search Results` : "Trending Videos"}
                         videos={searchQuery ? searchResults?.items : trendingVideos?.items}

@@ -148,8 +148,8 @@ const VideoPlayer: React.FC = () => {
     const videoId = typeof selectedVideo.id === 'string' ? selectedVideo.id : selectedVideo.id.videoId;
 
     return (
-        <div id="player-wrapper" className="bg-card rounded-lg overflow-hidden max-w-[65vw]">
-            <div className="aspect-video max-w-[65vw]">
+        <div id="player-wrapper" className="bg-card rounded-lg overflow-hidden ">
+            <div className="aspect-video max-w-full md:max-w-[65vw]">
                 <ReactPlayer
                     ref={playerRef}
                     url={`https://www.youtube.com/watch?v=${videoId}`}
