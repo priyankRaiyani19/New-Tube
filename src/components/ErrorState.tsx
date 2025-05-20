@@ -1,6 +1,6 @@
 import React from 'react';
 import {AlertOctagon} from 'lucide-react';
-import Button from './ui/Button';
+import Button from './Button.tsx';
 
 interface ErrorStateProps {
     message: string;

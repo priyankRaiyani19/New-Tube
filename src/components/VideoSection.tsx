@@ -34,7 +34,7 @@ const VideoSection: React.FC<VideoGridProps> = ({
                     />
                 ) :
                 isLoading ? (
-                        <div className="space-y-4  ">
+                        <div className="space-y-4 w-full">
                             {[...Array(4)].map((_, index) => (
                                 <LoadingSkeleton key={index}/>
                             ))}

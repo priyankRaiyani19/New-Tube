@@ -2,8 +2,9 @@ import {useInfiniteQuery, useQuery} from 'react-query';
 import {
     fetchTrendingMusicVideos,
     fetchTrendingVideos,
+    fetchVideoCategories,
     getVideoById,
-    searchVideos
+    searchVideos,
 } from '../services/products/api/youtubeApi.ts';
 
 export const useTrendingVideos = (videoCategoryId?: string) => {
@@ -13,10 +14,8 @@ export const useTrendingVideos = (videoCategoryId?: string) => {
         getNextPageParam: (lastPage) => lastPage.nextPageToken,
         staleTime: 1000 * 60 * 5,
         refetchOnWindowFocus: false,
-    })
-}
-
-
+    });
+};
 export const useSearchVideos = (query: string) => {
     return useInfiniteQuery(
         ['searchVideos', query],
@@ -29,7 +28,6 @@ export const useSearchVideos = (query: string) => {
     );
 };
 
-
 export const useTrendingMusicVideos = () => {
     return useQuery(
         ['trendingMusicVideos'],
@@ -41,14 +39,18 @@ export const useTrendingMusicVideos = () => {
     );
 };
 
-
 export const useVideoDetails = (videoId: string | null) => {
     return useQuery(
         ['videoDetails', videoId],
-        () => videoId ? getVideoById(videoId) : null,
+        () => videoId ? getVideoById(videoId) : Promise.resolve(null),
         {
             enabled: !!videoId,
             staleTime: 1000 * 60 * 5,
         }
     );
+};
+export const useVideoCategories = () => {
+    return useQuery(['videoCategories'], fetchVideoCategories, {
+        staleTime: 1000 * 60 * 60,
+    });
 };

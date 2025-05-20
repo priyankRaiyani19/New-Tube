@@ -48,7 +48,6 @@ export const searchVideos = async (
                     part: 'snippet,statistics',
                 },
             });
-
             const itemsWithStats = detailsResponse.data.items.map((item: any) => ({
                 ...item,
                 id: item.id,
@@ -88,9 +87,21 @@ export const getVideoById = async (videoId: string) => {
     }
 };
 
+export const fetchVideoCategories = async () => {
+    const response = await axiosInstance.get('/videoCategories', {
+        params: {
+            part: 'snippet',
+            regionCode: 'IN',
+        },
+    });
+    return response.data.items.map((item: any) => item.snippet.title);
+};
+
+
 export default {
     fetchTrendingVideos,
     fetchTrendingMusicVideos,
     searchVideos,
     getVideoById,
+    fetchVideoCategories
 };

@@ -6,3 +6,11 @@
     box-sizing: border-box;
     scroll-behavior: smooth;
 }
+
+@layer utilities {
+    .no-scrollbar {
+        scrollbarWidth: 'none';
+        msOverflowStyle: 'none';
+        WebkitOverflowScrolling: 'touch';
+    }
+}

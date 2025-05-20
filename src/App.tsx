@@ -7,6 +7,7 @@ import VideoPlayer from './components/VideoPlayer';
 import {useSearchVideos, useTrendingVideos} from './hooks/useYouTubeApi';
 import {Toaster} from 'react-hot-toast';
 import QueueList from './components/QueueList';
+import CategorySlider from './components/CategorySlider';
 
 const queryClient = new QueryClient();
 
@@ -39,6 +40,10 @@ function MainContent() {
         setSearchQuery(query);
     };
 
+    const handleCategoryClick = (category: string) => {
+        setSearchQuery(category);
+    };
+
     const observerRef = useRef<IntersectionObserver | null>(null);
 
     const loadMoreRef = useCallback(
@@ -49,7 +54,7 @@ function MainContent() {
                 if (entries[0].isIntersecting) {
                     if (searchQuery && hasSearchNextPage && !isFetchingSearchNextPage) {
                         fetchSearchNextPage();
-                    } else {
+                    } else if (!searchQuery && hasTrendingNextPage && !isFetchingTrendingNextPage) {
                         fetchTrendingNextPage();
                     }
                 }
@@ -80,16 +85,17 @@ function MainContent() {
     return (
         <div className="min-h-screen bg-background w-full p-4">
             <Navbar onSearch={handleSearch}/>
+            <CategorySlider onCategoryClick={handleCategoryClick}/>
 
-            <div className="w-full  flex md:flex-row flex-col gap-6  ">
-                <div className="w-full h-full md:mr-6  sm:w-8/12">
-                    <div className={`${!selectedVideo ? "md:block hidden" : "block"}`}>
+            <div className="w-full flex md:flex-row flex-col gap-6">
+                <div className="w-full h-full md:mr-6 sm:w-8/12">
+                    <div className={`${!selectedVideo ? 'md:block hidden' : 'block'}`}>
                         <VideoPlayer/>
                     </div>
                     {queue.length > 0 && <QueueList/>}
                 </div>
 
-                <div className="space-y-6 w-full sm:w-4/12 ">
+                <div className="space-y-6 sm:w-4/12">
                     <VideoSection
                         title={searchQuery ? `Search Results` : 'Trending Videos'}
                         videos={searchQuery ? searchVideoItems : trendingVideoItems}
