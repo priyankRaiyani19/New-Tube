@@ -18,19 +18,23 @@ const VideoSection: React.FC<VideoGridProps> = ({
                                                     isLoading,
                                                     isError,
                                                     error,
-                                                }) => {
+                                                }: VideoGridProps) => {
+    const handleRetry = () => {
+        window.location.reload();
+    }
     return (
-        <div>
+        <div className={`w-full`}>
             <h2 className="text-xl font-bold mb-4 text-white">{title}</h2>
 
             {isError ? (
                     <ErrorState
                         message={`Failed to load videos`}
                         error={error}
+                        onRetry={handleRetry}
                     />
                 ) :
                 isLoading ? (
-                        <div className="space-y-4">
+                        <div className="space-y-4 w-full">
                             {[...Array(4)].map((_, index) => (
                                 <LoadingSkeleton key={index}/>
                             ))}
@@ -46,7 +50,7 @@ const VideoSection: React.FC<VideoGridProps> = ({
                             ))}
                         </div>
                     ) : (
-                        <p className="text-gray-400 text-center py-10">No videos found</p>
+                        <p className="text-white text-center text-xl py-10">No videos found</p>
                     )}
         </div>
     );

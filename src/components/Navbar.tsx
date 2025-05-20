@@ -24,7 +24,7 @@ const Navbar: React.FC<NavbarProps> = ({onSearch}) => {
     };
 
     return (
-        <div className="sticky top-0 z-10 bg-black bg-opacity-95 backdrop-blur-sm p-4">
+        <div className="sticky top-0 z-50 bg-black p-4">
             <div className="flex md:flex-row flex-col gap-4 md:items-center justify-between w-full h-full md:h-16">
 
                 <div className="flex items-center">
@@ -35,7 +35,7 @@ const Navbar: React.FC<NavbarProps> = ({onSearch}) => {
                 </div>
 
 
-                <div className=" flex-1 max-w-full md:max-w-xl mx-8">
+                <div className=" flex-1  max-w-full md:max-w-xl bg-black">
                     <form onSubmit={handleSubmit} className="relative">
                         <input
                             type="text"

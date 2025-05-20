@@ -1,33 +1,74 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react';
-import { Video } from '../types/video';
+import {createContext, ReactNode, useContext, useState} from 'react';
+import {Video} from '../types/video';
 
 interface VideoContextType {
-  selectedVideo: Video | null;
-  setSelectedVideo: (video: Video | null) => void;
-  isPlayerOpen: boolean;
-  setIsPlayerOpen: (open: boolean) => void;
+    selectedVideo: Video | null;
+    setSelectedVideo: (video: Video | null) => void;
+    queue: Video[];
+    addToQueue: (video: Video) => void;
+    removeFromQueue: (videoId: string) => void;
+    saveForLater: (video: Video) => void;
+    savedVideos: Video[];
 }
 
 const VideoContext = createContext<VideoContextType | undefined>(undefined);
 
-export const VideoProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
-  const [isPlayerOpen, setIsPlayerOpen] = useState(false);
+export const VideoProvider = ({children}: { children: ReactNode }) => {
+    const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
+    const [queue, setQueue] = useState<Video[]>([]);
+    const [savedVideos, setSavedVideos] = useState<Video[]>([]);
 
-  const value = {
-    selectedVideo,
-    setSelectedVideo,
-    isPlayerOpen,
-    setIsPlayerOpen,
-  };
+    const getVideoId = (video: Video) => {
+        if (typeof video.id === 'string') return video.id;
+        if ('videoId' in video.id) return video.id.videoId;
+        return '';
+    };
 
-  return <VideoContext.Provider value={value}>{children}</VideoContext.Provider>;
+    const addToQueue = (video: Video) => {
+        const videoId = getVideoId(video);
+        setQueue((prev) => {
+            if (prev.some((v) => getVideoId(v) === videoId)) {
+                return prev;
+            }
+            return [...prev, video];
+        });
+    };
+
+    const removeFromQueue = (videoId: string) => {
+        setQueue((prev) => prev.filter((v) => getVideoId(v) !== videoId));
+    };
+
+    const saveForLater = (video: Video) => {
+        const videoId = getVideoId(video);
+        setSavedVideos((prev) => {
+            if (prev.some((v) => getVideoId(v) === videoId)) {
+                return prev;
+            }
+            return [...prev, video];
+        });
+    };
+
+    return (
+        <VideoContext.Provider
+            value={{
+                selectedVideo,
+                setSelectedVideo,
+                queue,
+                addToQueue,
+                removeFromQueue,
+                saveForLater,
+                savedVideos,
+            }}
+        >
+            {children}
+        </VideoContext.Provider>
+    );
 };
 
 export const useVideo = (): VideoContextType => {
-  const context = useContext(VideoContext);
-  if (context === undefined) {
-    throw new Error('useVideo must be used within a VideoProvider');
-  }
-  return context;
+    const context = useContext(VideoContext);
+    if (!context) {
+        throw new Error('useVideo must be used within a VideoProvider');
+    }
+    return context;
 };

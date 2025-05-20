@@ -1,27 +1,29 @@
-import { useQuery } from 'react-query';
-import { 
-  fetchTrendingVideos, 
-  fetchTrendingMusicVideos, 
-  searchVideos, 
-  getVideoById 
+import {useInfiniteQuery, useQuery} from 'react-query';
+import {
+    fetchTrendingMusicVideos,
+    fetchTrendingVideos,
+    getVideoById,
+    searchVideos
 } from '../services/products/api/youtubeApi.ts';
 
-export const useTrendingVideos = () => {
-  return useQuery(
-    ['trendingVideos'], 
-    () => fetchTrendingVideos(),
-    {
-      staleTime: 1000 * 60 * 5,
-      refetchOnWindowFocus: false,
-    }
-  );
-};
+export const useTrendingVideos = (videoCategoryId?: string) => {
+    return useInfiniteQuery({
+        queryKey: ['trendingVideos', videoCategoryId],
+        queryFn: ({pageParam}) => fetchTrendingVideos({pageParam, videoCategoryId}),
+        getNextPageParam: (lastPage) => lastPage.nextPageToken,
+        staleTime: 1000 * 60 * 5,
+        refetchOnWindowFocus: false,
+    })
+}
+
+
 export const useSearchVideos = (query: string) => {
-    return useQuery(
+    return useInfiniteQuery(
         ['searchVideos', query],
-        () => searchVideos(query),
+        ({pageParam = ''}) => searchVideos(query, pageParam),
         {
             enabled: !!query && query.length > 1,
+            getNextPageParam: (lastPage) => lastPage.nextPageToken || undefined,
             staleTime: 1000 * 60 * 1,
         }
     );
@@ -29,24 +31,24 @@ export const useSearchVideos = (query: string) => {
 
 
 export const useTrendingMusicVideos = () => {
-  return useQuery(
-    ['trendingMusicVideos'], 
-    () => fetchTrendingMusicVideos(),
-    {
-      staleTime: 1000 * 60 * 5,
-      refetchOnWindowFocus: false,
-    }
-  );
+    return useQuery(
+        ['trendingMusicVideos'],
+        () => fetchTrendingMusicVideos(),
+        {
+            staleTime: 1000 * 60 * 5,
+            refetchOnWindowFocus: false,
+        }
+    );
 };
 
 
 export const useVideoDetails = (videoId: string | null) => {
-  return useQuery(
-    ['videoDetails', videoId],
-    () => videoId ? getVideoById(videoId) : null,
-    {
-      enabled: !!videoId,
-      staleTime: 1000 * 60 * 5,
-    }
-  );
+    return useQuery(
+        ['videoDetails', videoId],
+        () => videoId ? getVideoById(videoId) : null,
+        {
+            enabled: !!videoId,
+            staleTime: 1000 * 60 * 5,
+        }
+    );
 };
