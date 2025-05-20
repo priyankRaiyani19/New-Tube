@@ -49,7 +49,7 @@ function MainContent() {
                 if (entries[0].isIntersecting) {
                     if (searchQuery && hasSearchNextPage && !isFetchingSearchNextPage) {
                         fetchSearchNextPage();
-                    } else if (!searchQuery && hasTrendingNextPage && !isFetchingTrendingNextPage) {
+                    } else {
                         fetchTrendingNextPage();
                     }
                 }
@@ -81,15 +81,15 @@ function MainContent() {
         <div className="min-h-screen bg-background w-full p-4">
             <Navbar onSearch={handleSearch}/>
 
-            <div className="w-full  flex md:flex-row flex-col gap-6">
-                <div className="w-full h-full md:mr-6 ">
+            <div className="w-full  flex md:flex-row flex-col gap-6  ">
+                <div className="w-full h-full md:mr-6  sm:w-8/12">
                     <div className={`${!selectedVideo ? "md:block hidden" : "block"}`}>
                         <VideoPlayer/>
                     </div>
                     {queue.length > 0 && <QueueList/>}
                 </div>
 
-                <div className="space-y-6 w-full md:w-2/7 ">
+                <div className="space-y-6 w-full sm:w-4/12 ">
                     <VideoSection
                         title={searchQuery ? `Search Results` : 'Trending Videos'}
                         videos={searchQuery ? searchVideoItems : trendingVideoItems}

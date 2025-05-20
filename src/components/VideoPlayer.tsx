@@ -17,6 +17,7 @@ import {
     FaVolumeMute,
     FaVolumeUp
 } from 'react-icons/fa';
+import {formatViewCount} from "../utils/formatters.ts";
 
 const VideoPlayer: React.FC = () => {
     const {selectedVideo} = useVideo();
@@ -31,6 +32,7 @@ const VideoPlayer: React.FC = () => {
     const [isLiked, setIsLiked] = useState(false);
     const [isSpeedBoost, setIsSpeedBoost] = useState(false);
     const isSpaceHeld = useRef(false);
+    const [expanded, setExpanded] = useState(false);
 
     const handlePlayPause = () => setIsPlaying(prev => !prev);
 
@@ -129,13 +131,11 @@ const VideoPlayer: React.FC = () => {
         );
     }
 
-    const viewCount = selectedVideo.statistics?.viewCount
-        ? Intl.NumberFormat().format(parseInt(selectedVideo.statistics.viewCount))
-        : '';
+    const viewCount = formatViewCount(parseInt(selectedVideo.statistics.viewCount))
 
-    const likeCount = selectedVideo.statistics?.likeCount
-        ? Intl.NumberFormat().format(parseInt(selectedVideo.statistics.likeCount))
-        : '';
+
+    const likeCount = formatViewCount(parseInt(selectedVideo.statistics.likeCount));
+
 
     const videoId =
         typeof selectedVideo.id === 'string' ? selectedVideo.id : selectedVideo.id.videoId;
@@ -176,7 +176,7 @@ const VideoPlayer: React.FC = () => {
                     <Slider.Track className="bg-gray-600 rounded-full h-[4px] w-full relative">
                         <Slider.Range className="absolute h-full bg-primary-dark rounded-full"/>
                     </Slider.Track>
-                    <Slider.Thumb className="block w-4 h-4 bg-primary-light  rounded-full"/>
+                    <Slider.Thumb className="block w-4 h-4 bg-primary-light rounded-full"/>
                 </Slider.Root>
 
                 <div className="flex justify-between text-sm text-gray-400">
@@ -233,7 +233,31 @@ const VideoPlayer: React.FC = () => {
                             <span key={idx}>#{tag.replace(/\s+/g, '_')}</span>
                         ))}
                     </div>
-                    <p className="text-gray-300">{selectedVideo.snippet.description}</p>
+                    <p className="text-gray-300">
+                        {expanded || selectedVideo.snippet.description.length <= 150 ? (
+                            <div>
+                                {selectedVideo.snippet.description}
+                                {selectedVideo.snippet.description.length > 150 && (
+                                    <span
+                                        className="text-blue-400 cursor-pointer ml-1"
+                                        onClick={() => setExpanded(false)}
+                                    >
+                                        Show less
+                                    </span>
+                                )}
+                            </div>
+                        ) : (
+                            <div>
+                                {selectedVideo?.snippet?.description?.slice(0, 150)}...
+                                <span
+                                    className="text-blue-400 cursor-pointer ml-1"
+                                    onClick={() => setExpanded(true)}
+                                >
+                                    Show more
+                                </span>
+                            </div>
+                        )}
+                    </p>
                     <p className="text-indigo-400">{selectedVideo.snippet.channelTitle}</p>
                 </div>
 

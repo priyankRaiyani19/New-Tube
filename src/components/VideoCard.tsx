@@ -4,6 +4,7 @@ import {useVideo} from '../context/VideoContext';
 import {MoreVertical, Play} from 'lucide-react';
 import {formatTimeAgo, formatViewCount} from '../utils/formatters';
 import {PiQueueBold} from 'react-icons/pi';
+import toast from 'react-hot-toast';
 
 interface VideoCardProps {
     video: Video;
@@ -38,6 +39,7 @@ const VideoCard: React.FC<VideoCardProps> = ({video}) => {
         e.stopPropagation();
         if (!isAlreadyQueued) {
             addToQueue(video);
+            toast.success('Added to queue');
         }
         setMenuOpen(false);
     };
@@ -60,11 +62,9 @@ const VideoCard: React.FC<VideoCardProps> = ({video}) => {
         };
     }, []);
 
-    const thumbnailUrl =
-        video.snippet.thumbnails.high?.url || video.snippet.thumbnails.medium?.url;
-    const viewCount = video.statistics?.viewCount
-        ? formatViewCount(parseInt(video.statistics.viewCount))
-        : '';
+    const thumbnailUrl = video.snippet.thumbnails.high?.url || video.snippet.thumbnails.medium?.url;
+    const viewCount = formatViewCount(parseInt(video.statistics.viewCount))
+
     const publishedAt = formatTimeAgo(video.snippet.publishedAt);
 
     return (
@@ -114,13 +114,11 @@ const VideoCard: React.FC<VideoCardProps> = ({video}) => {
                             className="absolute right-0 mt-2 bg-gray-600/10 backdrop-blur-lg border border-white/10 rounded-md shadow-xl w-44 z-50 text-sm overflow-hidden">
                             <button
                                 onClick={handleAddToQueue}
-                                className={`flex gap-1 w-full text-left px-4 py-2 text-white hover:bg-white/20 transition-colors ${
-                                    isAlreadyQueued ? 'cursor-not-allowed opacity-50' : ''
-                                }`}
+                                className={`flex gap-1 w-full text-left px-4 py-2 text-white hover:bg-white/20 transition-colors `}
                                 disabled={isAlreadyQueued}
                             >
                                 <PiQueueBold size={18} className="mr-2" color="#fff"/>
-                                {isAlreadyQueued ? 'Already in Queue' : 'Add to Queue'}
+                                {isAlreadyQueued ? 'Remove From Queue' : 'Add to Queue'}
                             </button>
                             <button
                                 onClick={handleSaveForLater}
