@@ -6,6 +6,12 @@ export interface VideoThumbnail {
     height: number;
 }
 
+export interface VideoApiProps {
+    pageParam?: string
+    videoCategoryId?: string
+}
+
+
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     variant?: 'primary' | 'secondary' | 'ghost';
     size?: 'sm' | 'md' | 'lg';

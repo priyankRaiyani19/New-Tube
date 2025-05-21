@@ -1,14 +1,11 @@
-import {YouTubeSearchResponse} from '../../../types/video.ts';
+import {VideoApiProps, YouTubeSearchResponse} from '../../../types/video.ts';
 import {axiosInstance} from "./Client.ts";
 
 
 export const fetchTrendingVideos = async ({
                                               pageParam = '',
                                               videoCategoryId,
-                                          }: {
-    pageParam?: string
-    videoCategoryId?: string
-}): Promise<YouTubeSearchResponse> => {
+                                          }: VideoApiProps): Promise<YouTubeSearchResponse> => {
     const params: Record<string, string | number> = {
         chart: 'mostPopular',
         maxResults: 12,
