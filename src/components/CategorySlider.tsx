@@ -1,4 +1,4 @@
-import {JSXElementConstructor, ReactElement, ReactNode, useRef, useState} from 'react'
+import {useRef, useState} from 'react'
 import {useVideoCategories} from '../hooks/useYouTubeApi.ts'
 import {ChevronLeft, ChevronRight} from 'lucide-react'
 import {VideoCategorySliderProps} from "../types/video.ts";
@@ -40,14 +40,10 @@ export default function CategorySlider({onCategoryClick}: VideoCategorySliderPro
 
             <div
                 ref={sliderRef}
-                className="flex overflow-x-auto space-x-3 px-3 py-3 scrollbar-hide"
-                style={{
-                    scrollbarWidth: 'none',
-                    msOverflowStyle: 'none',
-                    WebkitOverflowScrolling: 'touch',
-                }}
+                className="flex overflow-x-auto space-x-3 px-3 py-3 scrollbar-hide no-scrollbar"
+
             >
-                {data.map((category: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined, i: any) => (
+                {data.map((category, i) => (
                     <div
                         key={category + i}
                         onClick={() => handleCategoryClick(category)}

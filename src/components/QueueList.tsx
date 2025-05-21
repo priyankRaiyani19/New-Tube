@@ -33,7 +33,7 @@ const QueueList = () => {
     };
 
     return (
-        <div className="p-4 sm:p-6 max-w-full">
+        <div className="p-4 sm:p-6 max-w-full ">
             <h2 className="text-white text-xl sm:text-2xl font-extrabold mb-5 sm:mb-6 tracking-wide select-none">
                 Up Next
             </h2>
@@ -42,7 +42,7 @@ const QueueList = () => {
                     No videos in queue.
                 </p>
             ) : (
-                <ul className="space-y-4 sm:space-y-5 overflow-y-auto no-scrollbar max-h-[400px]">
+                <ul className="space-y-4 sm:space-y-5 overflow-y-auto  sm:max-h-full max-h-[400px]  ">
                     {mappedQueue.map(({video, videoId}) => {
                         const isSelected = videoId === selectedVideoId;
                         return (
