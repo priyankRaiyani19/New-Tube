@@ -1,12 +1,8 @@
 import React from 'react';
 import {AlertOctagon} from 'lucide-react';
 import Button from './Button.tsx';
+import {ErrorStateProps} from "../types/video.ts";
 
-interface ErrorStateProps {
-    message: string;
-    error?: unknown;
-    onRetry?: () => void;
-}
 
 const ErrorState: React.FC<ErrorStateProps> = ({
                                                    message,

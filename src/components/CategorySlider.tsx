@@ -1,10 +1,8 @@
 import {useRef, useState} from 'react'
 import {useVideoCategories} from '../hooks/useYouTubeApi.ts'
 import {ChevronLeft, ChevronRight} from 'lucide-react'
+import {VideoCategorySliderProps} from "../types/video.ts";
 
-interface VideoCategorySliderProps {
-    onCategoryClick: (category: string) => void
-}
 
 const CategorySlider = ({onCategoryClick}: VideoCategorySliderProps) => {
     const {data, isLoading, isError} = useVideoCategories()

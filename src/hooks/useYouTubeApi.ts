@@ -1,11 +1,5 @@
 import {useInfiniteQuery, useQuery} from 'react-query';
-import {
-    fetchTrendingMusicVideos,
-    fetchTrendingVideos,
-    fetchVideoCategories,
-    getVideoById,
-    searchVideos,
-} from '../services/products/api/youtubeApi.ts';
+import {fetchTrendingVideos, fetchVideoCategories, searchVideos,} from '../services/products/api/youtubeApi.ts';
 
 export const useTrendingVideos = (videoCategoryId?: string) => {
     return useInfiniteQuery({
@@ -28,27 +22,6 @@ export const useSearchVideos = (query: string) => {
     );
 };
 
-export const useTrendingMusicVideos = () => {
-    return useQuery(
-        ['trendingMusicVideos'],
-        () => fetchTrendingMusicVideos(),
-        {
-            staleTime: 1000 * 60 * 5,
-            refetchOnWindowFocus: false,
-        }
-    );
-};
-
-export const useVideoDetails = (videoId: string | null) => {
-    return useQuery(
-        ['videoDetails', videoId],
-        () => videoId ? getVideoById(videoId) : Promise.resolve(null),
-        {
-            enabled: !!videoId,
-            staleTime: 1000 * 60 * 5,
-        }
-    );
-};
 export const useVideoCategories = () => {
     return useQuery(['videoCategories'], fetchVideoCategories, {
         staleTime: 1000 * 60 * 60,

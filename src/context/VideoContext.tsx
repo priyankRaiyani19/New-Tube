@@ -1,15 +1,6 @@
 import {createContext, ReactNode, useContext, useState} from 'react';
-import {Video} from '../types/video';
+import {Video, VideoContextType} from '../types/video';
 
-interface VideoContextType {
-    selectedVideo: Video | null;
-    setSelectedVideo: (video: Video | null) => void;
-    queue: Video[];
-    addToQueue: (video: Video) => void;
-    removeFromQueue: (videoId: string) => void;
-    saveForLater: (video: Video) => void;
-    savedVideos: Video[];
-}
 
 const VideoContext = createContext<VideoContextType | undefined>(undefined);
 

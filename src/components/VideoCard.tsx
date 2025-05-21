@@ -6,11 +6,8 @@ import {formatTimeAgo, formatViewCount} from '../utils/formatters';
 import {PiQueueBold} from 'react-icons/pi';
 import toast from 'react-hot-toast';
 
-interface VideoCardProps {
-    video: Video;
-}
 
-const VideoCard: React.FC<VideoCardProps> = ({video}) => {
+const VideoCard = ({video}: { video: Video }) => {
     const {setSelectedVideo, addToQueue, saveForLater, queue} = useVideo();
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);

@@ -2,11 +2,8 @@ import React, {useState} from 'react';
 import {FaSearch} from 'react-icons/fa';
 import {MdOutlineOndemandVideo} from 'react-icons/md';
 import {IoMdCloseCircle} from 'react-icons/io';
+import {NavbarProps} from "../types/video.ts";
 
-
-interface NavbarProps {
-    onSearch: (query: string) => void;
-}
 
 const Navbar: React.FC<NavbarProps> = ({onSearch}) => {
     const [searchQuery, setSearchQuery] = useState('');

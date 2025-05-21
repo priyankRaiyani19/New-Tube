@@ -67,26 +67,6 @@ export const searchVideos = async (
         throw error;
     }
 };
-
-export const fetchTrendingMusicVideos = async (): Promise<YouTubeSearchResponse> => {
-    return fetchTrendingVideos({videoCategoryId: "10"});
-};
-
-export const getVideoById = async (videoId: string) => {
-    try {
-        const response = await axiosInstance.get('/videos', {
-            params: {
-                id: videoId,
-                part: 'snippet,statistics',
-            },
-        });
-        return response.data.items[0];
-    } catch (error) {
-        console.error('Error fetching video details:', error);
-        throw error;
-    }
-};
-
 export const fetchVideoCategories = async () => {
     const response = await axiosInstance.get('/videoCategories', {
         params: {
@@ -98,10 +78,3 @@ export const fetchVideoCategories = async () => {
 };
 
 
-export default {
-    fetchTrendingVideos,
-    fetchTrendingMusicVideos,
-    searchVideos,
-    getVideoById,
-    fetchVideoCategories
-};

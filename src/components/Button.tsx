@@ -1,11 +1,7 @@
 import React from 'react';
 import {cn} from '../utils/cn.ts';
+import {ButtonProps} from "../types/video.ts";
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    variant?: 'primary' | 'secondary' | 'ghost';
-    size?: 'sm' | 'md' | 'lg';
-    icon?: React.ReactNode;
-}
 
 const Button: React.FC<ButtonProps> = ({
                                            children,

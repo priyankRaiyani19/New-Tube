@@ -1,16 +1,9 @@
 import React from 'react';
-import {Video} from '../types/video';
 import VideoCard from './VideoCard';
 import ErrorState from './ErrorState';
 import LoadingSkeleton from './LoadingSkeleton';
+import {VideoGridProps} from "../types/video.ts";
 
-interface VideoGridProps {
-    title: string;
-    videos: Video[] | undefined;
-    isLoading: boolean;
-    isError: boolean;
-    error: unknown;
-}
 
 const VideoSection: React.FC<VideoGridProps> = ({
                                                     title,
