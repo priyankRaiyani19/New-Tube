@@ -25,7 +25,7 @@ export default function CategorySlider({onCategoryClick}: VideoCategorySliderPro
         <div className="flex justify-center items-center h-14 bg-gray-800 rounded-md">
             <div className="w-4 h-4 border-2 border-purple-500 border-t-transparent animate-spin rounded-full"/>
         </div>
-    ) : isError || !data || data.length === 0 ? (
+    ) : isError || !data ? (
         <div className="flex justify-center items-center h-14 bg-gray-800 text-gray-400 rounded-md">
             {isError ? 'Failed to load categories' : 'No categories available'}
         </div>
@@ -33,7 +33,7 @@ export default function CategorySlider({onCategoryClick}: VideoCategorySliderPro
         <div className="relative group">
             <button
                 onClick={() => scroll('left')}
-                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-gray-700 text-white hover:bg-purple-600 transition-opacity opacity-0 group-hover:opacity-100"
+                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-gray-800 text-white hover:bg-purple-600 transition-opacity opacity-0 group-hover:opacity-100 hidden sm:block "
             >
                 <ChevronLeft size={20}/>
             </button>

@@ -19,7 +19,6 @@ import {
 } from 'react-icons/fa'
 import {formatViewCount} from '../utils/formatters.ts'
 
-
 const VideoPlayer: React.FC = () => {
     const {selectedVideo, playPrevious, playNext, removeFromQueue} = useVideo()
 
@@ -36,8 +35,6 @@ const VideoPlayer: React.FC = () => {
     const isSpaceHeld = useRef(false)
     const [expanded, setExpanded] = useState(false)
     const hasRemovedFromQueue = useRef(false)
-
-    const handlePlayPause = () => setIsPlaying((prev) => !prev)
 
     const handleVolumeChange = (value: number[]) => {
         setVolume(value[0])
@@ -75,6 +72,20 @@ const VideoPlayer: React.FC = () => {
         playerRef.current.seekTo(time + (dir === 'forward' ? 10 : -10))
     }
 
+    function previousVideo() {
+        playPrevious()
+        setIsPlaying(true)
+        hasRemovedFromQueue.current = true
+    }
+
+    function nextVideo() {
+        playNext()
+        setIsPlaying(true)
+        hasRemovedFromQueue.current = true
+    }
+
+    const handlePlayPause = () => setIsPlaying((prev) => !prev)
+
     const toggleFullscreen = () => {
         const element = document.getElementById('player-wrapper')
         if (!element) return
@@ -86,6 +97,7 @@ const VideoPlayer: React.FC = () => {
             setIsFullscreen(false)
         }
     }
+
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -112,7 +124,6 @@ const VideoPlayer: React.FC = () => {
                     break
             }
         }
-
         const handleKeyUp = (e: KeyboardEvent) => {
             if (e.code === 'Space') {
                 if (isSpaceHeld.current) {
@@ -147,6 +158,7 @@ const VideoPlayer: React.FC = () => {
     )
 
     const likeCount = formatViewCount(parseInt(selectedVideo.statistics.likeCount));
+
     const videoId =
         typeof selectedVideo.id === 'string'
             ? selectedVideo.id
@@ -158,21 +170,37 @@ const VideoPlayer: React.FC = () => {
         return `${mins}:${secs.toString().padStart(2, '0')}`
     }
 
-    function previousVideo() {
-        playPrevious()
-        setIsPlaying(true)
-        hasRemovedFromQueue.current = true
-    }
+    const ControlButtons = [
+        {
+            key: 'previous',
+            icon: <FaStepBackward size={18}/>,
+            onClick: previousVideo,
+        },
+        {
+            key: 'skip-backward',
+            icon: <FaBackward size={18}/>,
+            onClick: () => handleSkip('backward'),
 
-    function nextVideo() {
-        playNext()
-        setIsPlaying(true)
-        hasRemovedFromQueue.current = true
-    }
-
+        },
+        {
+            key: 'play-pause',
+            icon: isPlaying ? <FaPause size={18}/> : <FaPlay size={18}/>,
+            onClick: handlePlayPause,
+        },
+        {
+            key: 'skip-forward',
+            icon: <FaForward size={18}/>,
+            onClick: () => handleSkip('forward'),
+        },
+        {
+            key: 'next',
+            icon: <FaStepForward size={18}/>,
+            onClick: nextVideo,
+        }
+    ]
     return (
         <div className="bg-zinc-900 rounded-xl overflow-hidden shadow-lg" id="player-wrapper">
-            <div className="aspect-video">
+            <div id={"player"} className="aspect-video">
                 <ReactPlayer
                     ref={playerRef}
                     url={`https://www.youtube.com/watch?v=${videoId}`}
@@ -187,6 +215,7 @@ const VideoPlayer: React.FC = () => {
                 />
             </div>
 
+
             <div className="p-4 space-y-2">
                 <Slider.Root
                     className="relative flex items-center w-full h-3"
@@ -195,10 +224,7 @@ const VideoPlayer: React.FC = () => {
                     step={0.001}
                     onValueChange={handleSeekChange}
                     onPointerDown={handleSeekMouseDown}
-                    onPointerUp={(event) => {
-                        const target = event.target as HTMLElement
-                        // The onPointerUp handler from Radix actually does NOT pass the value by default.
-                        // So we must use the current played state:
+                    onPointerUp={() => {
                         handleSeekMouseUp([played])
                     }}
                 >
@@ -215,25 +241,17 @@ const VideoPlayer: React.FC = () => {
 
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3 text-white">
-                        <button onClick={previousVideo} className="hover:text-indigo-400 transition">
-                            <FaStepBackward size={18}/>
-                        </button>
-                        <button onClick={() => handleSkip('backward')} className="hover:text-indigo-400 transition">
-                            <FaBackward size={18}/>
-                        </button>
-                        <button onClick={handlePlayPause} className="text-white transition p-2 rounded-full">
-                            {isPlaying ? <FaPause size={18}/> : <FaPlay size={18}/>}
-                        </button>
-                        <button onClick={() => handleSkip('forward')} className="hover:text-indigo-400 transition">
-                            <FaForward size={18}/>
-                        </button>
-                        <button onClick={nextVideo} className="hover:text-indigo-400 transition">
-                            <FaStepForward size={18}/>
-                        </button>
+
+                        {ControlButtons.map((button) => (
+                            <button onClick={button.onClick} className="hover:text-primary-light transition">
+                                {button.icon}
+                            </button>
+                        ))}
+
                     </div>
 
                     <div className="flex items-center gap-3">
-                        <button onClick={toggleMute} className="text-white hover:text-indigo-400 transition">
+                        <button onClick={toggleMute} className="text-white hover:text-primary-dark transition">
                             {isMuted ? <FaVolumeMute size={18}/> : <FaVolumeUp size={18}/>}
                         </button>
                         <Slider.Root
@@ -256,7 +274,7 @@ const VideoPlayer: React.FC = () => {
                 </div>
 
                 <div className="space-y-2">
-                    <h2 className="text-2xl font-semibold text-white">{selectedVideo.snippet.title}</h2>
+                    <h2 className=" text-2xl font-semibold text-white">{selectedVideo.snippet.title}</h2>
                     <div className="flex flex-wrap gap-2 text-sm text-indigo-400">
                         {selectedVideo.snippet.tags?.slice(0, 5).map((tag, idx) => (
                             <span key={idx}>#{tag.replace(/\s+/g, '_')}</span>
@@ -268,7 +286,13 @@ const VideoPlayer: React.FC = () => {
                                 {selectedVideo.snippet.description}
                                 {selectedVideo.snippet.description.length > 150 && (
                                     <span className="text-blue-400 cursor-pointer ml-1"
-                                          onClick={() => setExpanded(false)}>
+                                          onClick={() => {
+                                              setExpanded(false)
+                                              const targetElement = document.getElementById("player")
+                                              if (targetElement) {
+                                                  targetElement.scrollIntoView({behavior: 'smooth'})
+                                              }
+                                          }}>
                     Show less
                   </span>
                                 )}
@@ -276,7 +300,10 @@ const VideoPlayer: React.FC = () => {
                         ) : (
                             <div>
                                 {selectedVideo.snippet.description.slice(0, 150)}...
-                                <span className="text-blue-400 cursor-pointer ml-1" onClick={() => setExpanded(true)}>
+                                <span className="text-blue-400 cursor-pointer ml-1" onClick={() => {
+                                    setExpanded(true);
+                                }}>
+
                   Show more
                 </span>
                             </div>

@@ -85,7 +85,7 @@ function MainContent() {
     return (
         <div className="min-h-screen bg-background w-full p-4">
             <Navbar onSearch={handleSearch}/>
-            <CategorySlider onCategoryClick={handleCategoryClick}/>
+
 
             <div className="w-full flex md:flex-row flex-col gap-6">
                 <div className="w-full h-full md:mr-6 sm:w-8/12">
@@ -96,6 +96,7 @@ function MainContent() {
                 </div>
 
                 <div className="space-y-6 sm:w-4/12">
+                    <CategorySlider onCategoryClick={handleCategoryClick}/>
                     <VideoSection
                         title={searchQuery ? `Search Results` : 'Trending Videos'}
                         videos={searchQuery ? searchVideoItems : trendingVideoItems}
