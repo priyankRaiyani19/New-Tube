@@ -9,7 +9,9 @@ const getVideoId = (video: any) => {
 };
 
 const QueueList = () => {
-    const {queue, setSelectedVideo, removeFromQueue} = useVideo();
+    const {queue, selectedVideo, setSelectedVideo, removeFromQueue} = useVideo();
+
+    const selectedVideoId = selectedVideo ? getVideoId(selectedVideo) : '';
 
     const mappedQueue = queue.map((video: any) => ({
         video,
@@ -40,35 +42,40 @@ const QueueList = () => {
                     No videos in queue.
                 </p>
             ) : (
-                <ul className="space-y-4 sm:space-y-5 overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent max-h-[400px]">
-                    {mappedQueue.map(({video, videoId}) => (
-                        <li
-                            key={videoId}
-                            onClick={() => handleElementClick(video, videoId)}
-                            className="flex items-center gap-3 sm:gap-5 rounded-2xl p-3 sm:p-4 cursor-pointer group"
-                        >
-                            <img
-                                src={video.snippet.thumbnails?.default?.url || ''}
-                                alt={video.snippet.title}
-                                className="w-16 h-10 sm:w-24 sm:h-14 object-cover rounded-lg ring-1 ring-white/20 group-hover:scale-110 transition-transform duration-300"
-                            />
-                            <div className="flex-1 text-white min-w-0">
-                                <p className="text-sm sm:text-md font-semibold leading-tight line-clamp-2">
-                                    {video.snippet.title}
-                                </p>
-                                <p className="text-xs text-zinc-400 mt-0.5 select-text truncate">
-                                    {video.snippet.channelTitle}
-                                </p>
-                            </div>
-                            <button
-                                onClick={(e) => handleRemoveClick(e, videoId)}
-                                className="text-primary hover:text-red-500 transition-colors p-2 rounded-full hover:bg-red-900/30"
-                                aria-label="Remove video from queue"
+                <ul className="space-y-4 sm:space-y-5 overflow-y-auto no-scrollbar max-h-[400px]">
+                    {mappedQueue.map(({video, videoId}) => {
+                        const isSelected = videoId === selectedVideoId;
+                        return (
+                            <li
+                                key={videoId}
+                                onClick={() => handleElementClick(video, videoId)}
+                                className={`flex items-center gap-3 sm:gap-5 rounded-2xl p-3 sm:p-4 cursor-pointer group transition-all duration-300 ${
+                                    isSelected ? 'bg-white/10 ' : 'hover:bg-white/5'
+                                }`}
                             >
-                                <X size={18}/>
-                            </button>
-                        </li>
-                    ))}
+                                <img
+                                    src={video.snippet.thumbnails?.default?.url || ''}
+                                    alt={video.snippet.title}
+                                    className="w-16 h-10 sm:w-24 sm:h-14 object-cover rounded-lg ring-1 ring-white/20 group-hover:scale-110 transition-transform duration-300"
+                                />
+                                <div className="flex-1 text-white min-w-0">
+                                    <p className="text-sm sm:text-md font-semibold leading-tight line-clamp-2">
+                                        {video.snippet.title}
+                                    </p>
+                                    <p className="text-xs text-zinc-400 mt-0.5 select-text truncate">
+                                        {video.snippet.channelTitle}
+                                    </p>
+                                </div>
+                                <button
+                                    onClick={(e) => handleRemoveClick(e, videoId)}
+                                    className="text-primary hover:text-red-500 transition-colors p-2 rounded-full hover:bg-red-900/30"
+                                    aria-label="Remove video from queue"
+                                >
+                                    <X size={18}/>
+                                </button>
+                            </li>
+                        );
+                    })}
                 </ul>
             )}
         </div>

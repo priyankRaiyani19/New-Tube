@@ -1,10 +1,10 @@
-import {useRef, useState} from 'react'
+import {JSXElementConstructor, ReactElement, ReactNode, useRef, useState} from 'react'
 import {useVideoCategories} from '../hooks/useYouTubeApi.ts'
 import {ChevronLeft, ChevronRight} from 'lucide-react'
 import {VideoCategorySliderProps} from "../types/video.ts";
 
 
-const CategorySlider = ({onCategoryClick}: VideoCategorySliderProps) => {
+export default function CategorySlider({onCategoryClick}: VideoCategorySliderProps) {
     const {data, isLoading, isError} = useVideoCategories()
     const [activeCategory, setActiveCategory] = useState<string | null>(null)
     const sliderRef = useRef<HTMLDivElement>(null)
@@ -21,23 +21,15 @@ const CategorySlider = ({onCategoryClick}: VideoCategorySliderProps) => {
         onCategoryClick(category)
     }
 
-    if (isLoading) {
-        return (
-            <div className="flex justify-center items-center h-14 bg-gray-800 rounded-md">
-                <div className="w-4 h-4 border-2 border-purple-500 border-t-transparent animate-spin rounded-full"/>
-            </div>
-        )
-    }
-
-    if (isError || !data || data.length === 0) {
-        return (
-            <div className="flex justify-center items-center h-14 bg-gray-800 text-gray-400 rounded-md">
-                {isError ? 'Failed to load categories' : 'No categories available'}
-            </div>
-        )
-    }
-
-    return (
+    return isLoading ? (
+        <div className="flex justify-center items-center h-14 bg-gray-800 rounded-md">
+            <div className="w-4 h-4 border-2 border-purple-500 border-t-transparent animate-spin rounded-full"/>
+        </div>
+    ) : isError || !data || data.length === 0 ? (
+        <div className="flex justify-center items-center h-14 bg-gray-800 text-gray-400 rounded-md">
+            {isError ? 'Failed to load categories' : 'No categories available'}
+        </div>
+    ) : (
         <div className="relative group">
             <button
                 onClick={() => scroll('left')}
@@ -48,14 +40,14 @@ const CategorySlider = ({onCategoryClick}: VideoCategorySliderProps) => {
 
             <div
                 ref={sliderRef}
-                className="flex overflow-x-auto space-x-3 px-3 py-3 scrollbar-hide "
+                className="flex overflow-x-auto space-x-3 px-3 py-3 scrollbar-hide"
                 style={{
                     scrollbarWidth: 'none',
                     msOverflowStyle: 'none',
-                    WebkitOverflowScrolling: 'touch'
+                    WebkitOverflowScrolling: 'touch',
                 }}
             >
-                {data.map((category, i) => (
+                {data.map((category: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined, i: any) => (
                     <div
                         key={category + i}
                         onClick={() => handleCategoryClick(category)}
@@ -82,4 +74,3 @@ const CategorySlider = ({onCategoryClick}: VideoCategorySliderProps) => {
     )
 }
 
-export default CategorySlider

@@ -6,6 +6,13 @@ export interface VideoThumbnail {
     height: number;
 }
 
+export interface Video {
+    id: string | { videoId: string }
+    title: string
+    url: string
+}
+
+
 export interface VideoApiProps {
     pageParam?: string
     videoCategoryId?: string
@@ -32,15 +39,18 @@ export interface NavbarProps {
     onSearch: (query: string) => void;
 }
 
-
 export interface VideoContextType {
-    selectedVideo: Video | null;
-    setSelectedVideo: (video: Video | null) => void;
-    queue: Video[];
-    addToQueue: (video: Video) => void;
-    removeFromQueue: (videoId: string) => void;
-    saveForLater: (video: Video) => void;
-    savedVideos: Video[];
+    selectedVideo: Video | null
+    setSelectedVideo: (video: Video | null) => void
+    queue: Video[]
+    addToQueue: (video: Video) => void
+    removeFromQueue: (videoId: string) => void
+    saveForLater: (video: Video) => void
+    savedVideos: Video[]
+    playFromQueue: (video: Video, index: number) => void
+    playNext: () => void
+    playPrevious: () => void
+    currentIndex: number
 }
 
 export interface VideoGridProps {
