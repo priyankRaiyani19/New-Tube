@@ -36,6 +36,15 @@ const VideoPlayer: React.FC = () => {
     const [expanded, setExpanded] = useState(false)
     const hasRemovedFromQueue = useRef(false)
 
+    // Reset state when video changes
+    useEffect(() => {
+        if (selectedVideo) {
+            setPlayed(0);
+            setIsPlaying(true);
+            hasRemovedFromQueue.current = false;
+        }
+    }, [selectedVideo]);
+
     const handleVolumeChange = (value: number[]) => {
         setVolume(value[0])
         setIsMuted(value[0] === 0)
@@ -75,16 +84,27 @@ const VideoPlayer: React.FC = () => {
     function previousVideo() {
         playPrevious()
         setIsPlaying(true)
-        hasRemovedFromQueue.current = true
+        hasRemovedFromQueue.current = false
     }
 
     function nextVideo() {
         playNext()
         setIsPlaying(true)
-        hasRemovedFromQueue.current = true
+        hasRemovedFromQueue.current = false
     }
 
-    const handlePlayPause = () => setIsPlaying((prev) => !prev)
+    const handlePlayPause = () => {
+        // Toggle the isPlaying state
+        setIsPlaying((prev) => !prev)
+    }
+
+    // Add handlers for player state changes
+    const handlePlay = () => setIsPlaying(true)
+    const handlePause = () => setIsPlaying(false)
+    const handleEnded = () => {
+        setIsPlaying(false)
+        nextVideo() // Auto play next video when current video ends
+    }
 
     const toggleFullscreen = () => {
         const element = document.getElementById('player-wrapper')
@@ -157,7 +177,7 @@ const VideoPlayer: React.FC = () => {
         parseInt(selectedVideo.statistics?.viewCount ?? '0')
     )
 
-    const likeCount = formatViewCount(parseInt(selectedVideo.statistics.likeCount));
+    const likeCount = formatViewCount(parseInt(selectedVideo.statistics?.likeCount ?? '0'));
 
     const videoId =
         typeof selectedVideo.id === 'string'
@@ -211,6 +231,9 @@ const VideoPlayer: React.FC = () => {
                     muted={isMuted}
                     onProgress={handleProgress}
                     onDuration={handleDuration}
+                    onPlay={handlePlay}
+                    onPause={handlePause}
+                    onEnded={handleEnded}
                     playbackRate={isSpeedBoost ? 2 : 1}
                 />
             </div>
@@ -243,7 +266,8 @@ const VideoPlayer: React.FC = () => {
                     <div className="flex items-center gap-3 text-white">
 
                         {ControlButtons.map((button) => (
-                            <button onClick={button.onClick} className="hover:text-primary-light transition">
+                            <button key={button.key} onClick={button.onClick}
+                                    className="hover:text-primary-light transition">
                                 {button.icon}
                             </button>
                         ))}
@@ -274,7 +298,7 @@ const VideoPlayer: React.FC = () => {
                 </div>
 
                 <div className="space-y-2">
-                    <h2 className=" text-2xl font-semibold text-white">{selectedVideo.snippet.title}</h2>
+                    <h2 className="text-2xl font-semibold text-white">{selectedVideo.snippet.title}</h2>
                     <div className="flex flex-wrap gap-2 text-sm text-indigo-400">
                         {selectedVideo.snippet.tags?.slice(0, 5).map((tag, idx) => (
                             <span key={idx}>#{tag.replace(/\s+/g, '_')}</span>
