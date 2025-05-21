@@ -1,8 +1,8 @@
-import React from 'react';
 import VideoCard from './VideoCard';
 import ErrorState from './ErrorState';
 import LoadingSkeleton from './LoadingSkeleton';
 import {VideoGridProps} from "../types/video.ts";
+import React from "react";
 
 
 const VideoSection: React.FC<VideoGridProps> = ({

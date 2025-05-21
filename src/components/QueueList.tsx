@@ -10,7 +10,7 @@ const getVideoId = (video: any) => {
 
 const QueueList = () => {
     const {queue, selectedVideo, setSelectedVideo, removeFromQueue} = useVideo();
-
+    // console.log("this is queue ", queue)
     const selectedVideoId = selectedVideo ? getVideoId(selectedVideo) : '';
 
     const mappedQueue = queue.map((video: any) => ({
