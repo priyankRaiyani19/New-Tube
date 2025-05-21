@@ -7,7 +7,7 @@ const VideoContext = createContext<VideoContextType | undefined>(undefined)
 export const VideoProvider: React.FC<{ children: ReactNode }> = ({children}) => {
     const [selectedVideo, setSelectedVideo] = useState<Video | null>(null)
     const [queue, setQueue] = useState<Video[]>([])
-    const [savedVideos, setSavedVideos] = useState<Video[]>([])
+    // const [savedVideos, setSavedVideos] = useState<Video[]>([])
     const [currentIndex, setCurrentIndex] = useState<number>(-1)
 
     const addToQueue = (video: Video) => {
@@ -31,15 +31,15 @@ export const VideoProvider: React.FC<{ children: ReactNode }> = ({children}) => 
         }
     }
 
-    const saveForLater = (video: Video) => {
-        setSavedVideos(prevSaved => {
-            const id = typeof video.id === 'string' ? video.id : video.id.videoId
-            if (prevSaved.some(v => (typeof v.id === 'string' ? v.id : v.id.videoId) === id)) {
-                return prevSaved
-            }
-            return [...prevSaved, video]
-        })
-    }
+    // const saveForLater = (video: Video) => {
+    //     setSavedVideos(prevSaved => {
+    //         const id = typeof video.id === 'string' ? video.id : video.id.videoId
+    //         if (prevSaved.some(v => (typeof v.id === 'string' ? v.id : v.id.videoId) === id)) {
+    //             return prevSaved
+    //         }
+    //         return [...prevSaved, video]
+    //     })
+    // }
 
     const playFromQueue = (video: Video, index: number) => {
         if (index >= 0 && index < queue.length) {
@@ -72,8 +72,8 @@ export const VideoProvider: React.FC<{ children: ReactNode }> = ({children}) => 
                 queue,
                 addToQueue,
                 removeFromQueue,
-                saveForLater,
-                savedVideos,
+                // saveForLater,
+                // savedVideos,
                 playFromQueue,
                 playNext,
                 playPrevious,

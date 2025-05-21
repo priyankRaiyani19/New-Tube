@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 
 
 const VideoCard = ({video}: { video: Video }) => {
-    const {setSelectedVideo, addToQueue, saveForLater, queue} = useVideo();
+    const {setSelectedVideo, addToQueue, queue} = useVideo();
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
 
@@ -41,11 +41,11 @@ const VideoCard = ({video}: { video: Video }) => {
         setMenuOpen(false);
     };
 
-    const handleSaveForLater = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        saveForLater(video);
-        setMenuOpen(false);
-    };
+    // const handleSaveForLater = (e: React.MouseEvent) => {
+    //     e.stopPropagation();
+    //     saveForLater(video);
+    //     setMenuOpen(false);
+    // };
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -117,12 +117,12 @@ const VideoCard = ({video}: { video: Video }) => {
                                 <PiQueueBold size={18} className="mr-2" color="#fff"/>
                                 {isAlreadyQueued ? 'Remove From Queue' : 'Add to Queue'}
                             </button>
-                            <button
-                                onClick={handleSaveForLater}
-                                className="w-full text-left px-4 py-2 text-white hover:bg-white/20 transition-colors"
-                            >
-                                Save for Later
-                            </button>
+                            {/*<button*/}
+                            {/*    onClick={handleSaveForLater}*/}
+                            {/*    className="w-full text-left px-4 py-2 text-white hover:bg-white/20 transition-colors"*/}
+                            {/*>*/}
+                            {/*    Save for Later*/}
+                            {/*</button>*/}
                         </div>
                     )}
                 </div>
