@@ -40,8 +40,6 @@ function MainContent() {
                 <div className="space-y-6 sm:w-4/12">
                     <CategorySlider onCategoryClick={handleCategoryClick}/>
                     <VideoSection searchQuery={searchQuery}/>
-
-                 
                 </div>
             </div>
         </div>

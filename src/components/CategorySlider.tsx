@@ -22,9 +22,15 @@ export default function CategorySlider({onCategoryClick}: VideoCategorySliderPro
     }
 
     return isLoading ? (
-        <div className="flex justify-center items-center h-14 rounded-md">
-            <div className="w-4 h-4 border-2 border-purple-500 border-t-transparent animate-spin rounded-full"/>
+        <div className="flex justify-around gap-4">
+            {Array.from({length: 3}).map((_, i) => (
+                <div
+                    key={i}
+                    className="h-8 w-full animate-pulse rounded-full bg-primary-light/50"
+                ></div>
+            ))}
         </div>
+
     ) : isError ? (
         <div className="flex justify-center items-center h-14  text-gray-400 rounded-md">
             {'No categories available'}
