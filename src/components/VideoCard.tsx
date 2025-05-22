@@ -58,31 +58,31 @@ const VideoCard = ({video}: { video: Video }) => {
 
     return (
         <div
-            className="group relative rounded-3xl overflow-hidden border border-white/10 bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-lg shadow-xl p-4 transition-all hover:shadow-2xl hover:scale-[1.015] duration-300 cursor-pointer"
+            className="group  rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-lg shadow-xl p-4 transition-all hover:shadow-2xl hover:scale-[1.015] duration-300 cursor-pointer"
             onClick={handleClick}
         >
             <div className="flex flex-col sm:flex-row gap-5">
-                <div className="relative w-full sm:w-48 h-56 sm:h-28 rounded-2xl overflow-hidden">
+                <div className="relative w-full sm:w-52 h-56 sm:h-28 rounded-2xl">
                     <img
                         src={thumbnailUrl}
                         alt={video.snippet.title}
-                        className="w-full h-full object-cover transition-all group-hover:scale-105 group-hover:brightness-110 rounded-2xl"
+                        className="w-full h-full object-cover transition-all group-hover:scale-105 group-hover:brightness-50 rounded-2xl"
                     />
                     <div
-                        className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-                        <Play size={32} className="text-white drop-shadow-xl"/>
+                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white">
+                        <Play size={32}/>
                     </div>
                 </div>
 
                 <div className="flex flex-col justify-between w-full">
                     <div className="flex justify-between items-start">
-                        <h3 className="text-white font-semibold text-base sm:text-lg line-clamp-2 leading-tight">
+                        <h3 className="text-white font-semibold text-base sm:text-lg line-clamp-2 ">
                             {video.snippet.title}
                         </h3>
                         <div className="relative" ref={menuRef} onClick={(e) => e.stopPropagation()}>
                             <button
                                 onClick={() => setMenuOpen(!menuOpen)}
-                                className="text-white p-2 rounded-full hover:bg-white/10 transition"
+                                className="text-white p-2 rounded-full hover:bg-white/10 "
                             >
                                 <MoreVertical size={20}/>
                             </button>
@@ -104,9 +104,9 @@ const VideoCard = ({video}: { video: Video }) => {
                         </div>
                     </div>
 
-                    <p className="text-zinc-400 text-sm mt-1">{video.snippet.channelTitle}</p>
+                    <p className="text-primary-light text-sm mt-1">{video.snippet.channelTitle}</p>
 
-                    <div className="flex items-center justify-between text-zinc-500 text-xs mt-2">
+                    <div className="flex items-center justify-between text-primary-dark text-xs mt-2">
                         {viewCount && <span>{viewCount} views</span>}
                         <span>{publishedAt}</span>
                     </div>

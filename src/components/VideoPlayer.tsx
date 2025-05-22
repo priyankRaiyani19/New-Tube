@@ -39,6 +39,7 @@ const VideoPlayer: React.FC = () => {
         if (selectedVideo) {
             setPlayed(0)
             setIsPlaying(true)
+            setExpanded(false)
         }
     }, [selectedVideo])
 

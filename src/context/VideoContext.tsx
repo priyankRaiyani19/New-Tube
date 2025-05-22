@@ -11,7 +11,7 @@ export const VideoProvider: React.FC<{ children: ReactNode }> = ({
     // const [savedVideos, setSavedVideos] = useState<Video[]>([])
     const [currentIndex, setCurrentIndex] = useState<number>(-1);
 
-    const getVideoId = (video: Video) => video.id || video.id.videoId;
+    const getVideoId = (video: Video) => video.id
 
     const addToQueue = (video: Video) => {
         setQueue((prevQueue) => {
