@@ -7,7 +7,7 @@ import {PiQueueBold} from 'react-icons/pi'
 import toast from 'react-hot-toast'
 
 const VideoCard = ({video}: { video: Video }) => {
-    const {setSelectedVideo, addToQueue, queue} = useVideo()
+    const {setSelectedVideo, addToQueue, removeFromQueue, queue} = useVideo()
     const [menuOpen, setMenuOpen] = useState(false)
     const menuRef = useRef<HTMLDivElement>(null)
 
@@ -33,12 +33,18 @@ const VideoCard = ({video}: { video: Video }) => {
 
     const handleAddToQueue = (e: React.MouseEvent) => {
         e.stopPropagation()
-        if (!isAlreadyQueued) {
-            addToQueue(video)
-            toast.success('Added to queue')
-        }
+        addToQueue(video)
+        toast.success('Added to queue')
         setMenuOpen(false)
     }
+
+    const handleRemoveFromQueue = (e: React.MouseEvent) => {
+        e.stopPropagation()
+        removeFromQueue(video)
+        toast.error('Removed from queue')
+        setMenuOpen(false)
+    }
+
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -65,6 +71,7 @@ const VideoCard = ({video}: { video: Video }) => {
                 <div className="relative w-full sm:w-52 h-56 sm:h-28 rounded-2xl">
                     <img
                         src={thumbnailUrl}
+                        loading="lazy"
                         alt={video.snippet.title}
                         className="w-full h-full object-cover transition-all group-hover:scale-105 group-hover:brightness-50 rounded-2xl"
                     />
@@ -88,13 +95,11 @@ const VideoCard = ({video}: { video: Video }) => {
                             </button>
                             {menuOpen && (
                                 <div
-                                    className="absolute right-0 mt-2 z-50 w-52 rounded-xl bg-zinc-800/80 border border-white/10 backdrop-blur-lg shadow-2xl overflow-hidden animate-fade-in">
+                                    className="absolute right-0 mt-2 z-50 w-52 rounded-xl bg-primary-dark/30 border border-white/10 backdrop-blur-lg shadow-2xl overflow-hidden animate-fade-in">
+
                                     <button
-                                        onClick={handleAddToQueue}
-                                        className={`flex items-center gap-3 px-4 py-3 w-full hover:bg-white/10 text-sm text-white transition ${
-                                            isAlreadyQueued ? 'opacity-50 cursor-not-allowed' : ''
-                                        }`}
-                                        disabled={isAlreadyQueued}
+                                        onClick={isAlreadyQueued ? handleRemoveFromQueue : handleAddToQueue}
+                                        className="flex items-center gap-3 px-4 py-3 w-full hover:bg-white/10 text-sm text-white transition"
                                     >
                                         <PiQueueBold size={20}/>
                                         {isAlreadyQueued ? 'Remove From Queue' : 'Add to Queue'}

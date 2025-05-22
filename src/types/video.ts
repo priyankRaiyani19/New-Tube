@@ -44,7 +44,7 @@ export interface VideoContextType {
     setSelectedVideo: (video: Video | null) => void
     queue: Video[]
     addToQueue: (video: Video) => void
-    removeFromQueue: (videoId: string) => void
+    removeFromQueue: (videoId: Video) => void
     // saveForLater: (video: Video) => void
     // savedVideos: Video[]
     playFromQueue: (video: Video, index: number) => void

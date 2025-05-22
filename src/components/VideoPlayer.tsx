@@ -3,25 +3,24 @@ import {useVideo} from '../context/VideoContext'
 import ReactPlayer from 'react-player'
 import * as Slider from '@radix-ui/react-slider'
 import {
-  FaBackward,
-  FaCompress,
-  FaExpand,
-  FaEye,
-  FaForward,
-  FaPause,
-  FaPlay,
-  FaRegThumbsUp,
-  FaStepBackward,
-  FaStepForward,
-  FaThumbsUp,
-  FaVolumeMute,
-  FaVolumeUp,
+    FaBackward,
+    FaCompress,
+    FaExpand,
+    FaEye,
+    FaForward,
+    FaPause,
+    FaPlay,
+    FaRegThumbsUp,
+    FaStepBackward,
+    FaStepForward,
+    FaThumbsUp,
+    FaVolumeMute,
+    FaVolumeUp,
 } from 'react-icons/fa'
 import {formatViewCount} from '../utils/formatters.ts'
 
 const VideoPlayer: React.FC = () => {
     const {selectedVideo, playPrevious, playNext} = useVideo()
-
     const playerRef = useRef<ReactPlayer>(null)
     const [isPlaying, setIsPlaying] = useState(false)
     const [volume, setVolume] = useState(0.7)
@@ -79,15 +78,11 @@ const VideoPlayer: React.FC = () => {
         setIsPlaying(true)
     }
 
-    const handlePlayPause = () => {
-        setIsPlaying(prev => !prev)
-    }
-
+    const handlePlayPause = () => setIsPlaying(prev => !prev)
     const handlePlay = () => setIsPlaying(true)
     const handlePause = () => setIsPlaying(false)
 
     const handleEnded = () => {
-        setIsPlaying(false)
         nextVideo()
     }
 
@@ -160,11 +155,7 @@ const VideoPlayer: React.FC = () => {
 
     const viewCount = formatViewCount(parseInt(selectedVideo.statistics?.viewCount ?? '0'))
     const likeCount = formatViewCount(parseInt(selectedVideo.statistics?.likeCount ?? '0'))
-
-    const videoId =
-        typeof selectedVideo.id === 'string'
-            ? selectedVideo.id
-            : selectedVideo.id.videoId
+    const videoId = typeof selectedVideo.id === 'string' ? selectedVideo.id : selectedVideo.id.videoId
 
     const formatTime = (seconds: number) => {
         const mins = Math.floor(seconds / 60)
@@ -173,31 +164,11 @@ const VideoPlayer: React.FC = () => {
     }
 
     const ControlButtons = [
-        {
-            key: 'previous',
-            icon: <FaStepBackward size={18}/>,
-            onClick: previousVideo,
-        },
-        {
-            key: 'skip-backward',
-            icon: <FaBackward size={18}/>,
-            onClick: () => handleSkip('backward'),
-        },
-        {
-            key: 'play-pause',
-            icon: isPlaying ? <FaPause size={18}/> : <FaPlay size={18}/>,
-            onClick: handlePlayPause,
-        },
-        {
-            key: 'skip-forward',
-            icon: <FaForward size={18}/>,
-            onClick: () => handleSkip('forward'),
-        },
-        {
-            key: 'next',
-            icon: <FaStepForward size={18}/>,
-            onClick: nextVideo,
-        }
+        {key: 'previous', icon: <FaStepBackward size={18}/>, onClick: previousVideo},
+        {key: 'skip-backward', icon: <FaBackward size={18}/>, onClick: () => handleSkip('backward')},
+        {key: 'play-pause', icon: isPlaying ? <FaPause size={18}/> : <FaPlay size={18}/>, onClick: handlePlayPause},
+        {key: 'skip-forward', icon: <FaForward size={18}/>, onClick: () => handleSkip('forward')},
+        {key: 'next', icon: <FaStepForward size={18}/>, onClick: nextVideo}
     ]
 
     return (
@@ -286,14 +257,13 @@ const VideoPlayer: React.FC = () => {
                             <div>
                                 {selectedVideo.snippet.description}
                                 {selectedVideo.snippet.description.length > 150 && (
-                                    <span className="text-blue-400 cursor-pointer ml-1"
-                                          onClick={() => {
-                                              setExpanded(false)
-                                              const targetElement = document.getElementById("player")
-                                              if (targetElement) {
-                                                  targetElement.scrollIntoView({behavior: 'smooth'})
-                                              }
-                                          }}>
+                                    <span className="text-blue-400 cursor-pointer ml-1" onClick={() => {
+                                        setExpanded(false)
+                                        const targetElement = document.getElementById("player")
+                                        if (targetElement) {
+                                            targetElement.scrollIntoView({behavior: 'smooth'})
+                                        }
+                                    }}>
                     Show less
                   </span>
                                 )}
@@ -301,8 +271,7 @@ const VideoPlayer: React.FC = () => {
                         ) : (
                             <div>
                                 {selectedVideo.snippet.description.slice(0, 150)}...
-                                <span className="text-blue-400 cursor-pointer ml-1"
-                                      onClick={() => setExpanded(true)}>
+                                <span className="text-blue-400 cursor-pointer ml-1" onClick={() => setExpanded(true)}>
                   Show more
                 </span>
                             </div>
