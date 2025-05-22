@@ -97,7 +97,7 @@ function MainContent() {
 
                 <div className="space-y-6 sm:w-4/12">
                     <CategorySlider onCategoryClick={handleCategoryClick}/>
-                    <VideoSection
+                    <VideoSection                    
                         title={searchQuery ? `Search Results` : 'Trending Videos'}
                         videos={searchQuery ? searchVideoItems : trendingVideoItems}
                         isLoading={searchQuery ? searchLoading : trendingLoading}

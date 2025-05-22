@@ -3,29 +3,29 @@ import {useVideo} from '../context/VideoContext'
 import ReactPlayer from 'react-player'
 import * as Slider from '@radix-ui/react-slider'
 import {
-    FaBackward,
-    FaCompress,
-    FaExpand,
-    FaEye,
-    FaForward,
-    FaPause,
-    FaPlay,
-    FaRegThumbsUp,
-    FaStepBackward,
-    FaStepForward,
-    FaThumbsUp,
-    FaVolumeMute,
-    FaVolumeUp,
+  FaBackward,
+  FaCompress,
+  FaExpand,
+  FaEye,
+  FaForward,
+  FaPause,
+  FaPlay,
+  FaRegThumbsUp,
+  FaStepBackward,
+  FaStepForward,
+  FaThumbsUp,
+  FaVolumeMute,
+  FaVolumeUp,
 } from 'react-icons/fa'
 import {formatViewCount} from '../utils/formatters.ts'
 
 const VideoPlayer: React.FC = () => {
-    const {selectedVideo, playPrevious, playNext, removeFromQueue} = useVideo()
+    const {selectedVideo, playPrevious, playNext} = useVideo()
 
     const playerRef = useRef<ReactPlayer>(null)
     const [isPlaying, setIsPlaying] = useState(false)
     const [volume, setVolume] = useState(0.7)
-    const [isMuted, setIsMuted] = useState(false)
+    const [isMuted, setIsMuted] = useState(true)
     const [played, setPlayed] = useState(0)
     const [duration, setDuration] = useState(0)
     const [seeking, setSeeking] = useState(false)
@@ -34,16 +34,13 @@ const VideoPlayer: React.FC = () => {
     const [isSpeedBoost, setIsSpeedBoost] = useState(false)
     const isSpaceHeld = useRef(false)
     const [expanded, setExpanded] = useState(false)
-    const hasRemovedFromQueue = useRef(false)
 
-    // Reset state when video changes
     useEffect(() => {
         if (selectedVideo) {
-            setPlayed(0);
-            setIsPlaying(true);
-            hasRemovedFromQueue.current = false;
+            setPlayed(0)
+            setIsPlaying(true)
         }
-    }, [selectedVideo]);
+    }, [selectedVideo])
 
     const handleVolumeChange = (value: number[]) => {
         setVolume(value[0])
@@ -51,7 +48,6 @@ const VideoPlayer: React.FC = () => {
     }
 
     const handleSeekChange = (value: number[]) => setPlayed(value[0])
-
     const handleSeekMouseDown = () => setSeeking(true)
 
     const handleSeekMouseUp = (value: number[]) => {
@@ -61,19 +57,10 @@ const VideoPlayer: React.FC = () => {
 
     const handleProgress = (state: { played: number }) => {
         if (!seeking) setPlayed(state.played)
-        if (state.played > 0 && !hasRemovedFromQueue.current && selectedVideo) {
-            const id =
-                typeof selectedVideo.id === 'string'
-                    ? selectedVideo.id
-                    : selectedVideo.id.videoId
-            removeFromQueue(id)
-            hasRemovedFromQueue.current = true
-        }
     }
 
     const handleDuration = (duration: number) => setDuration(duration)
-
-    const toggleMute = () => setIsMuted((prev) => !prev)
+    const toggleMute = () => setIsMuted(prev => !prev)
 
     const handleSkip = (dir: 'forward' | 'backward') => {
         if (!playerRef.current) return
@@ -84,26 +71,23 @@ const VideoPlayer: React.FC = () => {
     function previousVideo() {
         playPrevious()
         setIsPlaying(true)
-        hasRemovedFromQueue.current = false
     }
 
     function nextVideo() {
         playNext()
         setIsPlaying(true)
-        hasRemovedFromQueue.current = false
     }
 
     const handlePlayPause = () => {
-        // Toggle the isPlaying state
-        setIsPlaying((prev) => !prev)
+        setIsPlaying(prev => !prev)
     }
 
-    // Add handlers for player state changes
     const handlePlay = () => setIsPlaying(true)
     const handlePause = () => setIsPlaying(false)
+
     const handleEnded = () => {
         setIsPlaying(false)
-        nextVideo() // Auto play next video when current video ends
+        nextVideo()
     }
 
     const toggleFullscreen = () => {
@@ -117,7 +101,6 @@ const VideoPlayer: React.FC = () => {
             setIsFullscreen(false)
         }
     }
-
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -144,6 +127,7 @@ const VideoPlayer: React.FC = () => {
                     break
             }
         }
+
         const handleKeyUp = (e: KeyboardEvent) => {
             if (e.code === 'Space') {
                 if (isSpaceHeld.current) {
@@ -173,11 +157,8 @@ const VideoPlayer: React.FC = () => {
         )
     }
 
-    const viewCount = formatViewCount(
-        parseInt(selectedVideo.statistics?.viewCount ?? '0')
-    )
-
-    const likeCount = formatViewCount(parseInt(selectedVideo.statistics?.likeCount ?? '0'));
+    const viewCount = formatViewCount(parseInt(selectedVideo.statistics?.viewCount ?? '0'))
+    const likeCount = formatViewCount(parseInt(selectedVideo.statistics?.likeCount ?? '0'))
 
     const videoId =
         typeof selectedVideo.id === 'string'
@@ -200,7 +181,6 @@ const VideoPlayer: React.FC = () => {
             key: 'skip-backward',
             icon: <FaBackward size={18}/>,
             onClick: () => handleSkip('backward'),
-
         },
         {
             key: 'play-pause',
@@ -218,9 +198,10 @@ const VideoPlayer: React.FC = () => {
             onClick: nextVideo,
         }
     ]
+
     return (
         <div className="bg-zinc-900 rounded-xl overflow-hidden shadow-lg" id="player-wrapper">
-            <div id={"player"} className="aspect-video">
+            <div id="player" className="aspect-video">
                 <ReactPlayer
                     ref={playerRef}
                     url={`https://www.youtube.com/watch?v=${videoId}`}
@@ -238,7 +219,6 @@ const VideoPlayer: React.FC = () => {
                 />
             </div>
 
-
             <div className="p-4 space-y-2">
                 <Slider.Root
                     className="relative flex items-center w-full h-3"
@@ -247,9 +227,7 @@ const VideoPlayer: React.FC = () => {
                     step={0.001}
                     onValueChange={handleSeekChange}
                     onPointerDown={handleSeekMouseDown}
-                    onPointerUp={() => {
-                        handleSeekMouseUp([played])
-                    }}
+                    onPointerUp={() => handleSeekMouseUp([played])}
                 >
                     <Slider.Track className="bg-gray-600 rounded-full h-[4px] w-full relative">
                         <Slider.Range className="absolute h-full bg-primary-dark rounded-full"/>
@@ -264,14 +242,12 @@ const VideoPlayer: React.FC = () => {
 
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3 text-white">
-
                         {ControlButtons.map((button) => (
                             <button key={button.key} onClick={button.onClick}
                                     className="hover:text-primary-light transition">
                                 {button.icon}
                             </button>
                         ))}
-
                     </div>
 
                     <div className="flex items-center gap-3">
@@ -324,10 +300,8 @@ const VideoPlayer: React.FC = () => {
                         ) : (
                             <div>
                                 {selectedVideo.snippet.description.slice(0, 150)}...
-                                <span className="text-blue-400 cursor-pointer ml-1" onClick={() => {
-                                    setExpanded(true);
-                                }}>
-
+                                <span className="text-blue-400 cursor-pointer ml-1"
+                                      onClick={() => setExpanded(true)}>
                   Show more
                 </span>
                             </div>
