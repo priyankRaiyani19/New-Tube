@@ -1,15 +1,12 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React, {useRef} from 'react'
 import {Video} from '../types/video'
 import {useVideo} from '../context/VideoContext'
-import {MoreVertical, Play} from 'lucide-react'
+import {MoreVertical, Play, Plus, Minus} from 'lucide-react'
 import {formatTimeAgo, formatViewCount} from '../utils/formatters'
-import {PiQueueBold} from 'react-icons/pi'
 import toast from 'react-hot-toast'
 
 const VideoCard = ({video}: { video: Video }) => {
     const {setSelectedVideo, addToQueue, removeFromQueue, queue, selectedVideo} = useVideo()
-    const [menuOpen, setMenuOpen] = useState(false)
-    const menuRef = useRef<HTMLDivElement>(null)
 
     const handleClick = () => {
         setSelectedVideo(video)
@@ -39,7 +36,6 @@ const VideoCard = ({video}: { video: Video }) => {
 
         if (isCurrentlyPlaying) {
             toast.error('Cannot add currently playing video to queue')
-            setMenuOpen(false)
             return
         }
 
@@ -53,28 +49,13 @@ const VideoCard = ({video}: { video: Video }) => {
             addToQueue(video)
             toast.success('Added to queue')
         }
-
-        setMenuOpen(false)
     }
 
     const handleRemoveFromQueue = (e: React.MouseEvent) => {
         e.stopPropagation()
         removeFromQueue(video)
         toast.error('Removed from queue')
-        setMenuOpen(false)
     }
-
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-                setMenuOpen(false)
-            }
-        }
-        document.addEventListener('mousedown', handleClickOutside)
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside)
-        }
-    }, [])
 
     const thumbnailUrl = video.snippet.thumbnails.high?.url || video.snippet.thumbnails.medium?.url
     const viewCount = formatViewCount(parseInt(video.statistics.viewCount))
@@ -104,36 +85,28 @@ const VideoCard = ({video}: { video: Video }) => {
                         <h3 className="text-white font-semibold text-base sm:text-lg line-clamp-2 ">
                             {video.snippet.title}
                         </h3>
-                        <div className="relative" ref={menuRef} onClick={(e) => e.stopPropagation()}>
-                            <button
-                                onClick={() => setMenuOpen(!menuOpen)}
-                                className="text-white p-2 rounded-full hover:bg-white/10 "
-                            >
-                                <MoreVertical size={20}/>
-                            </button>
-                            {menuOpen && (
-                                <div
-                                    className="absolute right-0 mt-2 z-50 w-52 rounded-xl bg-primary-dark/30 border border-white/10 backdrop-blur-lg shadow-2xl overflow-hidden animate-fade-in">
-
-                                    {/* Only show queue option if video is not currently playing */}
-                                    {!isCurrentlyPlaying && (
-                                        <button
-                                            onClick={isAlreadyQueued ? handleRemoveFromQueue : handleAddToQueue}
-                                            className="flex items-center gap-3 px-4 py-3 w-full hover:bg-white/10 text-sm text-white transition"
-                                        >
-                                            <PiQueueBold size={20}/>
-                                            {isAlreadyQueued ? 'Remove From Queue' : 'Add to Queue'}
-                                        </button>
-                                    )}
-
-                                    {/* Show message if video is currently playing */}
-                                    {isCurrentlyPlaying && (
-                                        <div className="flex items-center gap-3 px-4 py-3 w-full text-sm text-gray-400">
-                                            <Play size={20}/>
-                                            Currently Playing
-                                        </div>
-                                    )}
+                        <div className="flex items-center gap-2">
+                            {/* Queue/Play Action Button */}
+                            {isCurrentlyPlaying ? (
+                                <div className="text-green-400 p-2 rounded-full bg-green-400/10">
+                                    <Play size={20} fill="currentColor"/>
                                 </div>
+                            ) : isAlreadyQueued ? (
+                                <button
+                                    onClick={handleRemoveFromQueue}
+                                    className="text-red-400 p-2 rounded-full hover:bg-red-400/10 transition"
+                                    title="Remove from queue"
+                                >
+                                    <Minus size={20}/>
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={handleAddToQueue}
+                                    className="text-blue-400 p-2 rounded-full hover:bg-blue-400/10 transition"
+                                    title={!selectedVideo ? "Play now" : "Add to queue"}
+                                >
+                                    <Plus size={20}/>
+                                </button>
                             )}
                         </div>
                     </div>
