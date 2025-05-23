@@ -43,8 +43,17 @@ const VideoCard = ({video}: { video: Video }) => {
             return
         }
 
-        addToQueue(video)
-        toast.success('Added to queue')
+        // If no video is currently playing, play this video directly instead of adding to queue
+        if (!selectedVideo) {
+            setSelectedVideo(video)
+            toast.success('Now playing')
+            document.body.scrollTop = 0
+            document.documentElement.scrollTop = 0
+        } else {
+            addToQueue(video)
+            toast.success('Added to queue')
+        }
+
         setMenuOpen(false)
     }
 
