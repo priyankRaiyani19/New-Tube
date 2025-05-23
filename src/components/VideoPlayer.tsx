@@ -90,14 +90,24 @@ const VideoPlayer: React.FC = () => {
         const element = document.getElementById('player-wrapper')
         if (!element) return
         if (!document.fullscreenElement) {
-            element.requestFullscreen()
-            setIsFullscreen(true)
+            element.requestFullscreen().then(() => {
+                if (screen.orientation && screen.orientation.lock) {
+                    screen.orientation.lock('landscape').catch(() => {
+                    })
+                }
+                setIsFullscreen(true)
+            }).catch(() => {
+            })
         } else {
-            document.exitFullscreen()
-            setIsFullscreen(false)
+            document.exitFullscreen().then(() => {
+                if (screen.orientation && screen.orientation.unlock) {
+                    screen.orientation.unlock()
+                }
+                setIsFullscreen(false)
+            }).catch(() => {
+            })
         }
     }
-
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.code === 'Space' && !isSpaceHeld.current) {
@@ -299,4 +309,4 @@ const VideoPlayer: React.FC = () => {
     )
 }
 
-export default VideoPlayer
+export default VideoPlayer;
