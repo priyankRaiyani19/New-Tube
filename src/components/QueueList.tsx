@@ -1,9 +1,9 @@
-import { X, GripVertical, PlayCircle, Clock } from 'lucide-react'
+import { X, GripVertical, PlayCircle, Clock, Trash2 } from 'lucide-react'
 import { useVideo } from '../context/VideoContext'
-// import toast from 'react-hot-toast'
 import { useRef } from 'react'
 import { DndProvider, useDrag, useDrop } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
+import toast from 'react-hot-toast'
 
 const getVideoId = (video: any) => {
     if (typeof video.id === 'string') return video.id
@@ -35,6 +35,11 @@ const QueueList = () => {
         toast.error('Removed from queue')
     }
 
+    const handleClearQueue = () => {
+        setQueue([])
+        toast.error('Queue cleared')
+    }
+
     return (
         <div className="p-4 max-w-full">
             <div className="flex items-center gap-3 mb-4">
@@ -43,6 +48,15 @@ const QueueList = () => {
                 </div>
                 <h2 className="text-xl font-bold text-white">Up Next</h2>
                 <p className="text-sm text-zinc-400 ml-auto">{queue.length} video{queue.length !== 1 ? 's' : ''}</p>
+                {queue.length > 0 && (
+                    <button
+                        onClick={handleClearQueue}
+                        className="ml-3 text-xs text-red-400 hover:text-red-300 flex items-center gap-1"
+                    >
+                        <Trash2 className="w-4 h-4" />
+                        Clear
+                    </button>
+                )}
             </div>
 
             {queue.length === 0 ? (
@@ -133,12 +147,9 @@ const QueueItem = ({
                 <p className="text-white text-sm font-semibold truncate">{video.snippet.title}</p>
                 <p className="text-zinc-400 text-xs truncate">{video.snippet.channelTitle} • #{index + 1}</p>
             </div>
-
-
-                <button onClick={(e) => onRemove(e, videoId)} className="text-red-400 hover:text-red-300">
-                    <X/>
-                </button>
-
+            <button onClick={(e) => onRemove(e, videoId)} className="text-red-400 hover:text-red-300">
+                <X />
+            </button>
         </li>
     )
 }
