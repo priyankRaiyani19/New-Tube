@@ -7,7 +7,7 @@ import {PiQueueBold} from 'react-icons/pi'
 import toast from 'react-hot-toast'
 
 const VideoCard = ({video}: { video: Video }) => {
-    const {setSelectedVideo, addToQueue, removeFromQueue, queue} = useVideo()
+    const {setSelectedVideo, addToQueue, removeFromQueue, queue, selectedVideo} = useVideo()
     const [menuOpen, setMenuOpen] = useState(false)
     const menuRef = useRef<HTMLDivElement>(null)
 
@@ -24,6 +24,7 @@ const VideoCard = ({video}: { video: Video }) => {
     }
 
     const videoId = getVideoId(video)
+    const selectedVideoId = selectedVideo ? getVideoId(selectedVideo) : null
 
     const isAlreadyQueued = queue.some((v) => {
         if (typeof v.id === 'string') return v.id === videoId
@@ -31,8 +32,17 @@ const VideoCard = ({video}: { video: Video }) => {
         return false
     })
 
+    const isCurrentlyPlaying = selectedVideoId === videoId
+
     const handleAddToQueue = (e: React.MouseEvent) => {
         e.stopPropagation()
+
+        if (isCurrentlyPlaying) {
+            toast.error('Cannot add currently playing video to queue')
+            setMenuOpen(false)
+            return
+        }
+
         addToQueue(video)
         toast.success('Added to queue')
         setMenuOpen(false)
@@ -44,7 +54,6 @@ const VideoCard = ({video}: { video: Video }) => {
         toast.error('Removed from queue')
         setMenuOpen(false)
     }
-
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -97,13 +106,24 @@ const VideoCard = ({video}: { video: Video }) => {
                                 <div
                                     className="absolute right-0 mt-2 z-50 w-52 rounded-xl bg-primary-dark/30 border border-white/10 backdrop-blur-lg shadow-2xl overflow-hidden animate-fade-in">
 
-                                    <button
-                                        onClick={isAlreadyQueued ? handleRemoveFromQueue : handleAddToQueue}
-                                        className="flex items-center gap-3 px-4 py-3 w-full hover:bg-white/10 text-sm text-white transition"
-                                    >
-                                        <PiQueueBold size={20}/>
-                                        {isAlreadyQueued ? 'Remove From Queue' : 'Add to Queue'}
-                                    </button>
+                                    {/* Only show queue option if video is not currently playing */}
+                                    {!isCurrentlyPlaying && (
+                                        <button
+                                            onClick={isAlreadyQueued ? handleRemoveFromQueue : handleAddToQueue}
+                                            className="flex items-center gap-3 px-4 py-3 w-full hover:bg-white/10 text-sm text-white transition"
+                                        >
+                                            <PiQueueBold size={20}/>
+                                            {isAlreadyQueued ? 'Remove From Queue' : 'Add to Queue'}
+                                        </button>
+                                    )}
+
+                                    {/* Show message if video is currently playing */}
+                                    {isCurrentlyPlaying && (
+                                        <div className="flex items-center gap-3 px-4 py-3 w-full text-sm text-gray-400">
+                                            <Play size={20}/>
+                                            Currently Playing
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>
