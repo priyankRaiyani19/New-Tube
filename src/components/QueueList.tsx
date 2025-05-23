@@ -125,7 +125,7 @@ const QueueItem = ({
                 opacity: isDragging ? 0.5 : 1
             }}
         >
-            <GripVertical className="w-5 h-5 text-zinc-400 flex-shrink-0 cursor-move" />
+            <GripVertical className="w-5 h-5 text-primary flex-shrink-0 cursor-move" />
             <div className="w-20 h-12 rounded-md overflow-hidden flex-shrink-0">
                 <img src={video.snippet.thumbnails?.default?.url || ''} alt={video.snippet.title} className="w-full h-full object-cover" />
             </div>
@@ -133,14 +133,12 @@ const QueueItem = ({
                 <p className="text-white text-sm font-semibold truncate">{video.snippet.title}</p>
                 <p className="text-zinc-400 text-xs truncate">{video.snippet.channelTitle} • #{index + 1}</p>
             </div>
-            <div className="flex gap-2">
-                <button onClick={(e) => { e.stopPropagation(); onClick(video, videoId) }} className="text-green-400 hover:text-green-300">
-                    <PlayCircle className="w-5 h-5" />
-                </button>
+
+
                 <button onClick={(e) => onRemove(e, videoId)} className="text-red-400 hover:text-red-300">
-                    <X className="w-5 h-5" />
+                    <X/>
                 </button>
-            </div>
+
         </li>
     )
 }
