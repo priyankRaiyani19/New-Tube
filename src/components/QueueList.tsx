@@ -1,6 +1,6 @@
 import { X, GripVertical, PlayCircle, Clock } from 'lucide-react'
 import { useVideo } from '../context/VideoContext'
-import toast from 'react-hot-toast'
+// import toast from 'react-hot-toast'
 import { useRef } from 'react'
 import { DndProvider, useDrag, useDrop } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'

@@ -49,7 +49,7 @@ export default function CategorySlider({onCategoryClick}: VideoCategorySliderPro
                 className="flex overflow-x-auto space-x-3 px-3 py-3 scrollbar-hide no-scrollbar"
 
             >
-                {data.map((category, i) => (
+                {data.map((category:any, i:number) => (
                     <div
                         key={category + i}
                         onClick={() => handleCategoryClick(category)}

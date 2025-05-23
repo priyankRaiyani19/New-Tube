@@ -49,6 +49,7 @@ export interface VideoContextType {
     // savedVideos: Video[]
     playFromQueue: (video: Video, index: number) => void
     playNext: () => void
+    setQueue: (queue: Video[]) => void
     playPrevious: () => void
     currentIndex: number
 }
@@ -91,7 +92,7 @@ export interface VideoStatistics {
 export interface Video {
     kind: string;
     etag: string;
-    id: string | { kind: string; videoId: string };
+    id: string | { videoId: string }
     snippet: VideoSnippet;
     statistics: VideoStatistics;
 }
