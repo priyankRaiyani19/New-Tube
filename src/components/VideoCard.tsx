@@ -1,12 +1,12 @@
-import React, {useRef} from 'react'
-import {Video} from '../types/video'
-import {useVideo} from '../context/VideoContext'
-import {MoreVertical, Play, Plus, Minus} from 'lucide-react'
-import {formatTimeAgo, formatViewCount} from '../utils/formatters'
+import React from 'react'
+import { Video } from '../types/video'
+import { useVideo } from '../context/VideoContext'
+import { Play, Plus, Minus } from 'lucide-react'
+import { formatTimeAgo, formatViewCount } from '../utils/formatters'
 import toast from 'react-hot-toast'
 
-const VideoCard = ({video}: { video: Video }) => {
-    const {setSelectedVideo, addToQueue, removeFromQueue, queue, selectedVideo} = useVideo()
+const VideoCard = ({ video }: { video: Video }) => {
+    const { setSelectedVideo, addToQueue, removeFromQueue, queue, selectedVideo } = useVideo()
 
     const handleClick = () => {
         setSelectedVideo(video)
@@ -33,13 +33,10 @@ const VideoCard = ({video}: { video: Video }) => {
 
     const handleAddToQueue = (e: React.MouseEvent) => {
         e.stopPropagation()
-
         if (isCurrentlyPlaying) {
             toast.error('Cannot add currently playing video to queue')
             return
         }
-
-        // If no video is currently playing, play this video directly instead of adding to queue
         if (!selectedVideo) {
             setSelectedVideo(video)
             toast.success('Now playing')
@@ -63,7 +60,7 @@ const VideoCard = ({video}: { video: Video }) => {
 
     return (
         <div
-            className="group  rounded-3xl border border-white/10 bg-primary-dark/20 p-4 transition-all hover:shadow-2xl hover:scale-[1.015] duration-300 cursor-pointer"
+            className="group rounded-3xl border border-white/10 bg-primary-dark/20 p-4 transition-all hover:shadow-2xl hover:scale-[1.015] duration-300 cursor-pointer"
             onClick={handleClick}
         >
             <div className="flex flex-col sm:flex-row gap-5">
@@ -74,22 +71,20 @@ const VideoCard = ({video}: { video: Video }) => {
                         alt={video.snippet.title}
                         className="w-full h-full object-cover transition-all group-hover:scale-105 group-hover:brightness-50 rounded-2xl"
                     />
-                    <div
-                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white">
-                        <Play size={32}/>
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white">
+                        <Play size={32} />
                     </div>
                 </div>
 
                 <div className="flex flex-col justify-between w-full">
                     <div className="flex justify-between items-start">
-                        <h3 className="text-white font-semibold text-base sm:text-lg line-clamp-2 ">
+                        <h3 className="text-white font-semibold text-base sm:text-lg line-clamp-2">
                             {video.snippet.title}
                         </h3>
                         <div className="flex items-center gap-2">
-                            {/* Queue/Play Action Button */}
                             {isCurrentlyPlaying ? (
                                 <div className="text-green-400 p-2 rounded-full bg-green-400/10">
-                                    <Play size={20} fill="currentColor"/>
+                                    <Play size={20} fill="currentColor" />
                                 </div>
                             ) : isAlreadyQueued ? (
                                 <button
@@ -97,15 +92,15 @@ const VideoCard = ({video}: { video: Video }) => {
                                     className="text-red-400 p-2 rounded-full hover:bg-red-400/10 transition"
                                     title="Remove from queue"
                                 >
-                                    <Minus size={20}/>
+                                    <Minus size={20} />
                                 </button>
                             ) : (
                                 <button
                                     onClick={handleAddToQueue}
                                     className="text-blue-400 p-2 rounded-full hover:bg-blue-400/10 transition"
-                                    title={!selectedVideo ? "Play now" : "Add to queue"}
+                                    title={!selectedVideo ? 'Play now' : 'Add to queue'}
                                 >
-                                    <Plus size={20}/>
+                                    <Plus size={20} />
                                 </button>
                             )}
                         </div>

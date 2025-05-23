@@ -3,15 +3,12 @@ import {Video, VideoContextType} from "../types/video.ts";
 
 const VideoContext = createContext<VideoContextType | undefined>(undefined);
 
-export const VideoProvider: React.FC<{ children: ReactNode }> = ({
-                                                                     children,
-                                                                 }) => {
+export const VideoProvider: React.FC<{ children: ReactNode }> = ({children}) => {
     const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
     const [queue, setQueue] = useState<Video[]>([]);
-    // const [savedVideos, setSavedVideos] = useState<Video[]>([])
     const [currentIndex, setCurrentIndex] = useState<number>(-1);
 
-    const getVideoId = (video: Video) => video.id
+    const getVideoId = (video: Video) => video.id;
 
     const addToQueue = (video: Video) => {
         setQueue((prevQueue) => {
@@ -24,23 +21,13 @@ export const VideoProvider: React.FC<{ children: ReactNode }> = ({
 
     const removeFromQueue = (videoId: string) => {
         setQueue((prevQueue) =>
-            prevQueue.filter((video) => videoId === getVideoId(video))
+            prevQueue.filter((video) => videoId !== getVideoId(video))
         );
         if (queue.length === 1 && currentIndex === 0) {
             setSelectedVideo(null);
             setCurrentIndex(-1);
         }
     };
-
-    // const saveForLater = (video: Video) => {
-    //     setSavedVideos(prevSaved => {
-    //         const id = typeof video.id === 'string' ? video.id : video.id.videoId
-    //         if (prevSaved.some(v => (typeof v.id === 'string' ? v.id : v.id.videoId) === id)) {
-    //             return prevSaved
-    //         }
-    //         return [...prevSaved, video]
-    //     })
-    // }
 
     const playFromQueue = (video: Video, index: number) => {
         if (index >= 0 && index < queue.length) {
@@ -71,10 +58,9 @@ export const VideoProvider: React.FC<{ children: ReactNode }> = ({
                 selectedVideo,
                 setSelectedVideo,
                 queue,
+                setQueue,
                 addToQueue,
                 removeFromQueue,
-                // saveForLater,
-                // savedVideos,
                 playFromQueue,
                 playNext,
                 playPrevious,
