@@ -91,7 +91,7 @@ const VideoPlayer: React.FC = () => {
         if (!element) return
         if (!document.fullscreenElement) {
             element.requestFullscreen().then(() => {
-                if (screen?.orientation && screen?.orientation.lock) {
+                if (screen?.orientation && screen?.orientation?.lock) {
                     screen?.orientation?.lock('landscape').catch(() => {
                     })
                 }
