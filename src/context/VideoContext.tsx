@@ -19,15 +19,20 @@ export const VideoProvider: React.FC<{ children: ReactNode }> = ({children}) => 
         });
     };
 
-    const removeFromQueue = (videoId: string) => {
-        setQueue((prevQueue) =>
-            prevQueue.filter((video) => videoId !== getVideoId(video))
-        );
-        if (queue.length === 1 && currentIndex === 0) {
-            setSelectedVideo(null);
-            setCurrentIndex(-1);
-        }
-    };
+    const removeFromQueue = (videoOrId: Video | string) => {
+        const videoId = typeof videoOrId === 'string' ? videoOrId : getVideoId(videoOrId)
+
+        setQueue((prevQueue) => {
+            const updatedQueue = prevQueue.filter((v) => getVideoId(v) !== videoId)
+
+            if (updatedQueue.length === 0 || currentIndex >= updatedQueue.length) {
+                setSelectedVideo(null)
+                setCurrentIndex(-1)
+            }
+
+            return updatedQueue
+        })
+    }
 
     const playFromQueue = (video: Video, index: number) => {
         if (index >= 0 && index < queue.length) {

@@ -89,7 +89,7 @@ const VideoPlayer: React.FC = () => {
     const toggleFullscreen = () => {
         const element = document.getElementById('player-wrapper')
         if (!element) return
-        if (!document.fullscreenElement) {
+        if (!document?.fullscreenElement) {
             element.requestFullscreen().then(() => {
                 if (screen?.orientation && screen?.orientation?.lock) {
                     screen?.orientation?.lock('landscape').catch(() => {
@@ -100,8 +100,8 @@ const VideoPlayer: React.FC = () => {
             })
         } else {
             document.exitFullscreen().then(() => {
-                if (screen.orientation && screen.orientation.unlock) {
-                    screen.orientation.unlock()
+                if (screen?.orientation && screen?.orientation?.unlock) {
+                    screen?.orientation.unlock()
                 }
                 setIsFullscreen(false)
             }).catch(() => {
@@ -113,7 +113,7 @@ const VideoPlayer: React.FC = () => {
             if (e.code === 'Space' && !isSpaceHeld.current) {
                 isSpaceHeld.current = true
                 if (playerRef.current?.getInternalPlayer()?.playbackRate !== 2) {
-                    playerRef.current!.getInternalPlayer().playbackRate = 2
+                    playerRef.current.getInternalPlayer().playbackRate = 2
                     setIsSpeedBoost(true)
                 }
             }
