@@ -52,7 +52,8 @@ export interface VideoContextType {
     playNext: () => void
     setQueue: (queue: Video[]) => void
     playPrevious: () => void
-    currentIndex: number
+    currentIndex: number,
+    clearQueue: () => void,
 }
 
 export interface VideoGridProps {

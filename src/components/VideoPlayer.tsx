@@ -24,7 +24,7 @@ const VideoPlayer: React.FC = () => {
     const playerRef = useRef<ReactPlayer>(null)
     const [isPlaying, setIsPlaying] = useState(false)
     const [volume, setVolume] = useState(0.7)
-    const [isMuted, setIsMuted] = useState(false)
+    const [isMuted, setIsMuted] = useState(true)
     const [played, setPlayed] = useState(0)
     const [duration, setDuration] = useState(0)
     const [seeking, setSeeking] = useState(false)

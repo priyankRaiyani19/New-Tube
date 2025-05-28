@@ -1,4 +1,4 @@
-import React, {createContext, ReactNode, useContext, useState} from "react";
+import React, {createContext, ReactNode, useContext, useEffect, useState} from "react";
 import {Video, VideoContextType} from "../types/video.ts";
 
 const VideoContext = createContext<VideoContextType | undefined>(undefined);
@@ -7,6 +7,61 @@ export const VideoProvider: React.FC<{ children: ReactNode }> = ({children}) => 
     const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
     const [queue, setQueue] = useState<Video[]>([]);
     const [currentIndex, setCurrentIndex] = useState<number>(-1);
+    const [isInitialized, setIsInitialized] = useState(false);
+
+    useEffect(() => {
+        const storedQueue = localStorage.getItem("video-queue");
+        const storedSelectedVideo = localStorage.getItem("selected-video");
+        const storedIndex = localStorage.getItem("current-index");
+
+        if (storedQueue) {
+            try {
+                const parsedQueue = JSON.parse(storedQueue);
+                setQueue(parsedQueue);
+            } catch (error) {
+                console.error("Error parsing stored queue:", error);
+            }
+        }
+
+        if (storedSelectedVideo) {
+            try {
+                const parsedVideo = JSON.parse(storedSelectedVideo);
+                setSelectedVideo(parsedVideo);
+            } catch (error) {
+                console.error("Error parsing stored selected video:", error);
+            }
+        }
+
+        if (storedIndex) {
+            const parsedIndex = parseInt(storedIndex, 10);
+            if (!isNaN(parsedIndex)) {
+                setCurrentIndex(parsedIndex);
+            }
+        }
+
+        setIsInitialized(true);
+    }, []);
+    useEffect(() => {
+        if (isInitialized) {
+            localStorage.setItem("video-queue", JSON.stringify(queue));
+        }
+    }, [queue, isInitialized]);
+
+    useEffect(() => {
+        if (isInitialized) {
+            if (selectedVideo) {
+                localStorage.setItem("selected-video", JSON.stringify(selectedVideo));
+            } else {
+                localStorage.removeItem("selected-video");
+            }
+        }
+    }, [selectedVideo, isInitialized]);
+
+    useEffect(() => {
+        if (isInitialized) {
+            localStorage.setItem("current-index", currentIndex.toString());
+        }
+    }, [currentIndex, isInitialized]);
 
     const getVideoId = (video: Video) => video.id;
 
@@ -23,16 +78,26 @@ export const VideoProvider: React.FC<{ children: ReactNode }> = ({children}) => 
         const videoId = typeof videoOrId === 'string' ? videoOrId : getVideoId(videoOrId);
 
         setQueue((prevQueue) => {
-            const updatedQueue = prevQueue.filter((v) => getVideoId(v) !== videoId)
+            const updatedQueue = prevQueue.filter((v) => getVideoId(v) !== videoId);
+            return updatedQueue;
+        });
 
-            if (updatedQueue.length === 0 || currentIndex >= updatedQueue.length) {
-                setSelectedVideo(null)
-                setCurrentIndex(-1)
+        setCurrentIndex((prevIndex) => {
+            const newQueue = queue.filter((v) => getVideoId(v) !== videoId);
+
+            if (newQueue.length === 0) {
+                setSelectedVideo(null);
+                return -1;
             }
 
-            return updatedQueue
-        })
-    }
+            if (prevIndex >= newQueue.length) {
+                setSelectedVideo(null);
+                return -1;
+            }
+
+            return prevIndex;
+        });
+    };
 
     const playFromQueue = (video: Video, index: number) => {
         if (index >= 0 && index < queue.length) {
@@ -57,6 +122,12 @@ export const VideoProvider: React.FC<{ children: ReactNode }> = ({children}) => 
         }
     };
 
+    const clearQueue = () => {
+        setQueue([]);
+        setSelectedVideo(null);
+        setCurrentIndex(-1);
+    };
+
     return (
         <VideoContext.Provider
             value={{
@@ -70,6 +141,7 @@ export const VideoProvider: React.FC<{ children: ReactNode }> = ({children}) => 
                 playNext,
                 playPrevious,
                 currentIndex,
+                clearQueue,
             }}
         >
             {children}

@@ -19,7 +19,7 @@ const QueueList = () => {
 
     const moveItem = (from: number, to: number) => {
         const updated = [...queue]
-        const [moved] = updated.splice(from, 1)
+        const [moved] = updated.splice(from, 1);
         updated.splice(to, 0, moved)
         setQueue(updated)
     }
