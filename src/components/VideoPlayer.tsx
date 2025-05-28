@@ -20,11 +20,11 @@ import {
 import {formatViewCount} from '../utils/formatters.ts'
 
 const VideoPlayer: React.FC = () => {
-    const {selectedVideo, playPrevious, playNext} = useVideo()
+    const {queue,currentIndex ,selectedVideo, playPrevious, playNext} = useVideo()
     const playerRef = useRef<ReactPlayer>(null)
     const [isPlaying, setIsPlaying] = useState(false)
     const [volume, setVolume] = useState(0.7)
-    const [isMuted, setIsMuted] = useState(true)
+    const [isMuted, setIsMuted] = useState(false)
     const [played, setPlayed] = useState(0)
     const [duration, setDuration] = useState(0)
     const [seeking, setSeeking] = useState(false)
@@ -82,9 +82,8 @@ const VideoPlayer: React.FC = () => {
     const handlePlay = () => setIsPlaying(true)
     const handlePause = () => setIsPlaying(false)
 
-    const handleEnded = () => {
-        nextVideo()
-    }
+    const handleEnded = () => (currentIndex + 1 < queue.length ? playNext() : handlePause())
+
 
     const toggleFullscreen = () => {
         const element = document.getElementById('player-wrapper')
@@ -113,7 +112,7 @@ const VideoPlayer: React.FC = () => {
             if (e.code === 'Space' && !isSpaceHeld.current) {
                 isSpaceHeld.current = true
                 if (playerRef.current?.getInternalPlayer()?.playbackRate !== 2) {
-                    playerRef.current.getInternalPlayer().playbackRate = 2
+                    playerRef.current!.getInternalPlayer().playbackRate = 2
                     setIsSpeedBoost(true)
                 }
             }
@@ -180,13 +179,14 @@ const VideoPlayer: React.FC = () => {
         {key: 'skip-forward', icon: <FaForward size={18}/>, onClick: () => handleSkip('forward')},
         {key: 'next', icon: <FaStepForward size={18}/>, onClick: nextVideo}
     ]
+    const url =`https://www.youtube.com/watch?v=${videoId}`
 
     return (
         <div className="bg-zinc-900 rounded-xl overflow-hidden shadow-lg" id="player-wrapper">
             <div id="player" className="aspect-video">
                 <ReactPlayer
                     ref={playerRef}
-                    url={`https://www.youtube.com/watch?v=${videoId}`}
+                    url={url}
                     width="100%"
                     height="100%"
                     playing={isPlaying}
@@ -198,12 +198,13 @@ const VideoPlayer: React.FC = () => {
                     onPause={handlePause}
                     onEnded={handleEnded}
                     playbackRate={isSpeedBoost ? 2 : 1}
+                    controls={false}
+           pip={true}
                 />
             </div>
-
-            <div className="p-4 space-y-2">
+            <div className="p-6 space-y-6 bg-black/50 shadow-lg">
                 <Slider.Root
-                    className="relative flex items-center w-full h-3"
+                    className="relative flex items-center w-full h-6 group"
                     value={[played]}
                     max={1}
                     step={0.001}
@@ -211,30 +212,35 @@ const VideoPlayer: React.FC = () => {
                     onPointerDown={handleSeekMouseDown}
                     onPointerUp={() => handleSeekMouseUp([played])}
                 >
-                    <Slider.Track className="bg-gray-600 rounded-full h-[4px] w-full relative">
-                        <Slider.Range className="absolute h-full bg-primary-dark rounded-full"/>
+                    <Slider.Track className="relative w-full h-2 bg-white/30 rounded-full overflow-hidden shadow-inner ">
+                        <Slider.Range className="absolute h-full bg-primary-dark rounded-full animate-[glow_2s_infinite]" />
                     </Slider.Track>
-                    <Slider.Thumb className="block w-4 h-4 bg-primary-light rounded-full"/>
-                </Slider.Root>
+                   </Slider.Root>
 
-                <div className="flex justify-between text-sm text-gray-400">
+
+
+
+                <div className="flex justify-between text-sm text-primary-dark">
                     <span>{formatTime(played * duration)}</span>
                     <span>{formatTime(duration)}</span>
                 </div>
 
                 <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3 text-white">
+                    <div className="flex items-center gap-4 text-white ">
                         {ControlButtons.map((button) => (
-                            <button key={button.key} onClick={button.onClick}
-                                    className="hover:text-primary-light transition">
+                            <button
+                                key={button.key}
+                                onClick={button.onClick}
+                                className="p-2 rounded-full hover:bg-primary-dark hover:text-primary transition"
+                            >
                                 {button.icon}
                             </button>
                         ))}
                     </div>
 
-                    <div className="flex items-center gap-3">
-                        <button onClick={toggleMute} className="text-white hover:text-primary-dark transition">
-                            {isMuted ? <FaVolumeMute size={18}/> : <FaVolumeUp size={18}/>}
+                    <div className="flex items-center gap-4">
+                        <button onClick={toggleMute} className="text-white hover:text-primary transition">
+                            {isMuted ? <FaVolumeMute size={18} /> : <FaVolumeUp size={18} />}
                         </button>
                         <Slider.Root
                             className="relative flex items-center w-24 h-3"
@@ -243,23 +249,24 @@ const VideoPlayer: React.FC = () => {
                             step={0.01}
                             onValueChange={handleVolumeChange}
                         >
-                            <Slider.Track className="bg-gray-600 relative grow rounded-full h-[4px]">
-                                <Slider.Range className="absolute bg-indigo-500 rounded-full h-full"/>
+                            <Slider.Track className="relative w-full h-2 bg-white/30 rounded-full overflow-hidden shadow-inner ">
+                                <Slider.Range className="absolute h-full bg-primary-dark rounded-full animate-[glow_2s_infinite]" />
                             </Slider.Track>
-                            <Slider.Thumb className="block w-3 h-3 bg-indigo-500 rounded-full"/>
+
+
                         </Slider.Root>
 
                         <button onClick={toggleFullscreen} className="text-white hover:text-indigo-400 transition">
-                            {isFullscreen ? <FaCompress size={18}/> : <FaExpand size={18}/>}
+                            {isFullscreen ? <FaExpand size={18} />  : <FaCompress size={18} />}
                         </button>
                     </div>
                 </div>
 
-                <div className="space-y-2">
-                    <h2 className="text-2xl font-semibold text-white">{selectedVideo.snippet.title}</h2>
-                    <div className="flex flex-wrap gap-2 text-sm text-indigo-400">
+                <div className="space-y-2 pt-4 border-t border-gray-700">
+                    <h2 className="text-2xl font-bold text-white leading-snug">{selectedVideo.snippet.title}</h2>
+                    <div className="flex flex-wrap gap-2 text-sm text-primary-dark ">
                         {selectedVideo.snippet.tags?.slice(0, 5).map((tag, idx) => (
-                            <span key={idx}>#{tag.replace(/\s+/g, '_')}</span>
+                            <span key={idx} className="hover:underline cursor-pointer">#{tag.replace(/\s+/g, '_')}</span>
                         ))}
                     </div>
                     <p className="text-gray-300">
@@ -267,44 +274,51 @@ const VideoPlayer: React.FC = () => {
                             <div>
                                 {selectedVideo.snippet.description}
                                 {selectedVideo.snippet.description.length > 150 && (
-                                    <span className="text-blue-400 cursor-pointer ml-1" onClick={() => {
-                                        setExpanded(false)
-                                        const targetElement = document.getElementById("player")
-                                        if (targetElement) {
-                                            targetElement.scrollIntoView({behavior: 'smooth'})
-                                        }
-                                    }}>
-                    Show less
-                  </span>
+                                    <span
+                                        className="text-primary-dark cursor-pointer ml-1 hover:underline"
+                                        onClick={() => {
+                                            setExpanded(false)
+                                            const targetElement = document.getElementById("player")
+                                            if (targetElement) {
+                                                targetElement.scrollIntoView({ behavior: 'smooth' })
+                                            }
+                                        }}
+                                    >
+              Show less
+            </span>
                                 )}
                             </div>
                         ) : (
                             <div>
                                 {selectedVideo.snippet.description.slice(0, 150)}...
-                                <span className="text-blue-400 cursor-pointer ml-1" onClick={() => setExpanded(true)}>
-                  Show more
-                </span>
+                                <span
+                                    className="text-primary-dark cursor-pointer ml-1 hover:underline"
+                                    onClick={() => setExpanded(true)}
+                                >
+            Show more
+          </span>
                             </div>
                         )}
                     </p>
-                    <p className="text-indigo-400">{selectedVideo.snippet.channelTitle}</p>
+                    <p className="text-primary-dark font-medium">{selectedVideo.snippet.channelTitle}</p>
                 </div>
 
-                <div className="flex items-center justify-between text-gray-400">
+                <div className="flex items-center justify-between text-gray-400 pt-4 border-t border-gray-700">
                     <div className="flex items-center gap-2">
-                        <FaEye size={18} className="text-indigo-500"/>
+                        <FaEye size={18} className="text-primary-dark" />
                         <span>{viewCount} views</span>
                     </div>
                     <div className="flex items-center gap-2">
                         {isLiked ? (
-                            <FaThumbsUp size={18} className="text-indigo-500" onClick={() => setIsLiked(false)}/>
+                            <FaThumbsUp size={18} className="text-primary-dark cursor-pointer" onClick={() => setIsLiked(false)} />
                         ) : (
-                            <FaRegThumbsUp size={18} className="text-indigo-500" onClick={() => setIsLiked(true)}/>
+                            <FaRegThumbsUp size={18} className="text-primary-dark cursor-pointer" onClick={() => setIsLiked(true)} />
                         )}
                         <span>{likeCount} likes</span>
                     </div>
                 </div>
             </div>
+
         </div>
     )
 }

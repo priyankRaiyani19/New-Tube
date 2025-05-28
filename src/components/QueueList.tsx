@@ -44,7 +44,7 @@ const QueueList = () => {
     return (
         <div className="p-4 max-w-full">
             <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 rounded-full bg-purple-500/10 border border-white/10">
+                <div className="p-2 rounded-full ">
                     <Clock className="w-5 h-5 text-purple-400" />
                 </div>
                 <h2 className="text-xl font-bold text-white">Up Next</h2>

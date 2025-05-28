@@ -5,9 +5,10 @@ import {ErrorStateProps} from "../types/video.ts";
 
 
 const ErrorState: React.FC<ErrorStateProps> = ({
-                                                   message,
+
                                                    error,
-                                                   onRetry
+                                                   onRetry,
+                                                   message
                                                }) => {
     const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
 

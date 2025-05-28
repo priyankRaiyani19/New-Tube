@@ -70,13 +70,14 @@ const VideoSection: React.FC<{ searchQuery: string }> = ({searchQuery}) => {
         return (
             <div className="w-full">
                 <ErrorState
+                    error={error}
                     message={error?.message || 'An error occurred'}
                     onRetry={handleRetry}
                 />
             </div>
         );
     }
-
+ 
     return (
         <div className="w-full">
             <h2 className="text-xl font-bold mb-4 text-white">

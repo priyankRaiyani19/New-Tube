@@ -30,9 +30,10 @@ export interface VideoCategorySliderProps {
 }
 
 export interface ErrorStateProps {
-    message: string;
-    error?: unknown;
-    onRetry?: () => void;
+    error?: unknown,
+    onRetry?: () => void,
+    message?: string,
+
 }
 
 export interface NavbarProps {

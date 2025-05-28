@@ -20,7 +20,7 @@ export const VideoProvider: React.FC<{ children: ReactNode }> = ({children}) => 
     };
 
     const removeFromQueue = (videoOrId: Video | string) => {
-        const videoId = typeof videoOrId === 'string' ? videoOrId : getVideoId(videoOrId)
+        const videoId = typeof videoOrId === 'string' ? videoOrId : getVideoId(videoOrId);
 
         setQueue((prevQueue) => {
             const updatedQueue = prevQueue.filter((v) => getVideoId(v) !== videoId)

@@ -49,7 +49,7 @@ const QueueItem = ({
             ref={ref}
             onClick={() => onClick(video, videoId)}
             className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition ${
-                isSelected ? 'bg-primary/10 border border-primary-dark' : 'bg-zinc-800 hover:bg-zinc-700'
+                isSelected ? 'bg-primary/10 border border-primary-dark' : 'bg-white/10 hover:bg-zinc-700'
             }`}
             style={{
                 opacity: isDragging ? 0.5 : 1
