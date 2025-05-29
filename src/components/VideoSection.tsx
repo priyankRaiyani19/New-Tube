@@ -84,13 +84,13 @@ const VideoSection: React.FC<{ searchQuery: string }> = ({searchQuery}) => {
                 {searchQuery ? 'Search Results' : 'Trending Videos'}
             </h2>
             {isLoading ? (
-                <div className="space-y-4 w-full">
-                    {[...Array(4)].map((_, index) => (
+                <div className="flex flex-wrap gap-4 justify-between">
+                    {[...Array(6)].map((_, index) => (
                         <LoadingSkeleton key={index}/>
                     ))}
                 </div>
             ) : videos.length > 0 ? (
-                <div className="space-y-4">
+                <div className="flex flex-wrap gap-4 justify-between">
                     {videos.map((video) => (
                         <VideoCard
                             key={typeof video.id === 'string' ? video.id : video.id.videoId}

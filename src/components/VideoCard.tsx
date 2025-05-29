@@ -60,61 +60,64 @@ const VideoCard = ({ video }: { video: Video }) => {
 
     return (
         <div
-            className="group rounded-3xl border border-white/10 bg-primary-dark/20 p-4 transition-all hover:shadow-2xl hover:scale-[1.015] duration-300 cursor-pointer"
+            className="group relative w-[480px] h-[180px] rounded-3xl border border-white/10 bg-gradient-to-br from-[#1f1f1f]/60 to-[#0f0f0f]/60 backdrop-blur-lg p-5 shadow-md hover:shadow-xl hover:scale-[1.025] transition-all duration-300 cursor-pointer"
             onClick={handleClick}
         >
-            <div className="flex flex-col sm:flex-row gap-5">
-                <div className="relative w-full sm:w-52 h-56 sm:h-28 rounded-2xl">
+            <div className="flex flex-col sm:flex-row gap-5 h-full">
+                <div className="relative w-full sm:w-52 h-56 sm:h-32 rounded-2xl overflow-hidden shadow-md">
                     <img
                         src={thumbnailUrl}
-                        loading="lazy"
                         alt={video.snippet.title}
-                        className="w-full h-full object-cover transition-all group-hover:scale-105 group-hover:brightness-50 rounded-2xl"
+                        loading="lazy"
+                        className="w-full h-full object-cover rounded-2xl transition-transform duration-300 group-hover:scale-110"
                     />
-                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white">
-                        <Play size={32} />
+                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+                        <Play size={28} className="text-white drop-shadow-md" />
                     </div>
                 </div>
 
                 <div className="flex flex-col justify-between w-full">
                     <div className="flex justify-between items-start">
-                        <h3 className="text-white font-semibold text-base sm:text-lg line-clamp-2">
+                        <h3 className="text-white font-semibold text-[15px] sm:text-[17px] leading-snug line-clamp-2">
                             {video.snippet.title}
                         </h3>
                         <div className="flex items-center gap-2">
                             {isCurrentlyPlaying ? (
-                                <div className="text-green-400 p-2 rounded-full bg-green-400/10">
-                                    <Play size={20} fill="currentColor" />
+                                <div className="bg-green-500/10 text-green-400 p-[6px] rounded-full shadow-sm shadow-green-500/30">
+                                    <Play size={18} fill="currentColor" />
                                 </div>
                             ) : isAlreadyQueued ? (
                                 <button
                                     onClick={handleRemoveFromQueue}
-                                    className="text-red-400 p-2 rounded-full hover:bg-red-400/10 transition"
+                                    className="bg-red-500/10 text-red-400 p-[6px] rounded-full hover:bg-red-500/20 transition"
                                     title="Remove from queue"
                                 >
-                                    <Minus size={20} />
+                                    <Minus size={18} />
                                 </button>
                             ) : (
                                 <button
                                     onClick={handleAddToQueue}
-                                    className="text-blue-400 p-2 rounded-full hover:bg-blue-400/10 transition"
+                                    className="bg-blue-500/10 text-blue-400 p-[6px] rounded-full hover:bg-blue-500/20 transition"
                                     title={!selectedVideo ? 'Play now' : 'Add to queue'}
                                 >
-                                    <Plus size={20} />
+                                    <Plus size={18} />
                                 </button>
                             )}
                         </div>
                     </div>
 
-                    <p className="text-primary-light text-sm mt-1">{video.snippet.channelTitle}</p>
+                    <p className="text-sm text-zinc-300 mt-1">{video.snippet.channelTitle}</p>
 
-                    <div className="flex items-center justify-between text-primary-dark text-xs mt-2">
+                    <div className="flex items-center justify-between text-xs text-zinc-500 mt-2">
                         {viewCount && <span>{viewCount} views</span>}
                         <span>{publishedAt}</span>
                     </div>
                 </div>
             </div>
+
+            <div className="absolute inset-0 rounded-3xl border border-white/5 group-hover:border-pink-500/20 pointer-events-none transition-all duration-300" />
         </div>
+
     )
 }
 

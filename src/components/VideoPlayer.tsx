@@ -4,20 +4,16 @@ import ReactPlayer from 'react-player'
 import * as Slider from '@radix-ui/react-slider'
 import {
     FaBackward,
-    FaCompress,
-    FaExpand,
-    FaEye,
     FaForward,
     FaPause,
     FaPlay,
-    FaRegThumbsUp,
     FaStepBackward,
     FaStepForward,
-    FaThumbsUp,
     FaVolumeMute,
     FaVolumeUp,
 } from 'react-icons/fa'
-import {formatViewCount} from '../utils/formatters.ts'
+import cdimag from "../assets/cd.png";
+
 
 const VideoPlayer: React.FC = () => {
     const {queue,currentIndex ,selectedVideo, playPrevious, playNext} = useVideo()
@@ -28,17 +24,13 @@ const VideoPlayer: React.FC = () => {
     const [played, setPlayed] = useState(0)
     const [duration, setDuration] = useState(0)
     const [seeking, setSeeking] = useState(false)
-    const [isFullscreen, setIsFullscreen] = useState(false)
-    const [isLiked, setIsLiked] = useState(false)
     const [isSpeedBoost, setIsSpeedBoost] = useState(false)
     const isSpaceHeld = useRef(false)
-    const [expanded, setExpanded] = useState(false)
 
     useEffect(() => {
         if (selectedVideo) {
             setPlayed(0)
             setIsPlaying(true)
-            setExpanded(false)
         }
     }, [selectedVideo])
 
@@ -94,7 +86,6 @@ const VideoPlayer: React.FC = () => {
                     screen?.orientation?.lock('landscape').catch(() => {
                     })
                 }
-                setIsFullscreen(true)
             }).catch(() => {
             })
         } else {
@@ -102,7 +93,6 @@ const VideoPlayer: React.FC = () => {
                 if (screen?.orientation && screen?.orientation?.unlock) {
                     screen?.orientation.unlock()
                 }
-                setIsFullscreen(false)
             }).catch(() => {
             })
         }
@@ -156,14 +146,13 @@ const VideoPlayer: React.FC = () => {
 
     if (!selectedVideo) {
         return (
-            <div className="aspect-video bg-zinc-900 rounded-xl flex items-center justify-center text-white/40">
+            <div className="h-full text-white flex items-center justify-center w-full">
                 Select a video to play
             </div>
         )
     }
 
-    const viewCount = formatViewCount(parseInt(selectedVideo.statistics?.viewCount ?? '0'))
-    const likeCount = formatViewCount(parseInt(selectedVideo.statistics?.likeCount ?? '0'))
+
     const videoId = typeof selectedVideo.id === 'string' ? selectedVideo.id : selectedVideo.id.videoId
 
     const formatTime = (seconds: number) => {
@@ -180,10 +169,10 @@ const VideoPlayer: React.FC = () => {
         {key: 'next', icon: <FaStepForward size={18}/>, onClick: nextVideo}
     ]
     const url =`https://www.youtube.com/watch?v=${videoId}`
-
+    console.log("this is thumnail",selectedVideo?.snippet?.thumbnails)
     return (
-        <div className="bg-zinc-900 rounded-xl overflow-hidden shadow-lg" id="player-wrapper">
-            <div id="player" className="aspect-video">
+        <div className="bg-zinc-900 rounded-xl overflow-hidden shadow-lg w-full flex" id="player-wrapper">
+            <div id="player" className="hidden w-full">
                 <ReactPlayer
                     ref={playerRef}
                     url={url}
@@ -199,10 +188,18 @@ const VideoPlayer: React.FC = () => {
                     onEnded={handleEnded}
                     playbackRate={isSpeedBoost ? 2 : 1}
                     controls={false}
-           pip={true}
+                    pip={true}
+
                 />
             </div>
-            <div className="p-6 space-y-6 bg-black/50 shadow-lg">
+
+            <img
+                src={selectedVideo?.snippet?.thumbnails?.medium?.url || cdimag}
+                alt=""
+                className=" bg-black/50  "
+            />
+            <div className="p-6 space-y-3 bg-black/50 shadow-lg min-w-[100vw]">
+                <h2 className="text-2xl font-bold text-white">{selectedVideo?.snippet.title}</h2>
                 <Slider.Root
                     className="relative flex items-center w-full h-6 group"
                     value={[played]}
@@ -215,18 +212,13 @@ const VideoPlayer: React.FC = () => {
                     <Slider.Track className="relative w-full h-2 bg-white/30 rounded-full overflow-hidden shadow-inner ">
                         <Slider.Range className="absolute h-full bg-primary-dark rounded-full animate-[glow_2s_infinite]" />
                     </Slider.Track>
-                   </Slider.Root>
-
-
-
-
+                </Slider.Root>
                 <div className="flex justify-between text-sm text-primary-dark">
                     <span>{formatTime(played * duration)}</span>
                     <span>{formatTime(duration)}</span>
                 </div>
-
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4 text-white ">
+                <div className="flex items-center justify-between  ">
+                    <div className="flex items-center gap-2 text-white ">
                         {ControlButtons.map((button) => (
                             <button
                                 key={button.key}
@@ -238,12 +230,12 @@ const VideoPlayer: React.FC = () => {
                         ))}
                     </div>
 
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-4 w-full">
                         <button onClick={toggleMute} className="text-white hover:text-primary transition">
                             {isMuted ? <FaVolumeMute size={18} /> : <FaVolumeUp size={18} />}
                         </button>
                         <Slider.Root
-                            className="relative flex items-center w-24 h-3"
+                            className="relative flex items-center w-[10vw]    h-3"
                             value={[isMuted ? 0 : volume]}
                             max={1}
                             step={0.01}
@@ -252,73 +244,10 @@ const VideoPlayer: React.FC = () => {
                             <Slider.Track className="relative w-full h-2 bg-white/30 rounded-full overflow-hidden shadow-inner ">
                                 <Slider.Range className="absolute h-full bg-primary-dark rounded-full animate-[glow_2s_infinite]" />
                             </Slider.Track>
-
-
                         </Slider.Root>
-
-                        <button onClick={toggleFullscreen} className="text-white hover:text-indigo-400 transition">
-                            {isFullscreen ? <FaExpand size={18} />  : <FaCompress size={18} />}
-                        </button>
-                    </div>
-                </div>
-
-                <div className="space-y-2 pt-4 border-t border-gray-700">
-                    <h2 className="text-2xl font-bold text-white leading-snug">{selectedVideo.snippet.title}</h2>
-                    <div className="flex flex-wrap gap-2 text-sm text-primary-dark ">
-                        {selectedVideo.snippet.tags?.slice(0, 5).map((tag, idx) => (
-                            <span key={idx} className="hover:underline cursor-pointer">#{tag.replace(/\s+/g, '_')}</span>
-                        ))}
-                    </div>
-                    <p className="text-gray-300">
-                        {expanded || selectedVideo.snippet.description.length <= 150 ? (
-                            <div>
-                                {selectedVideo.snippet.description}
-                                {selectedVideo.snippet.description.length > 150 && (
-                                    <span
-                                        className="text-primary-dark cursor-pointer ml-1 hover:underline"
-                                        onClick={() => {
-                                            setExpanded(false)
-                                            const targetElement = document.getElementById("player")
-                                            if (targetElement) {
-                                                targetElement.scrollIntoView({ behavior: 'smooth' })
-                                            }
-                                        }}
-                                    >
-              Show less
-            </span>
-                                )}
-                            </div>
-                        ) : (
-                            <div>
-                                {selectedVideo.snippet.description.slice(0, 150)}...
-                                <span
-                                    className="text-primary-dark cursor-pointer ml-1 hover:underline"
-                                    onClick={() => setExpanded(true)}
-                                >
-            Show more
-          </span>
-                            </div>
-                        )}
-                    </p>
-                    <p className="text-primary-dark font-medium">{selectedVideo.snippet.channelTitle}</p>
-                </div>
-
-                <div className="flex items-center justify-between text-gray-400 pt-4 border-t border-gray-700">
-                    <div className="flex items-center gap-2">
-                        <FaEye size={18} className="text-primary-dark" />
-                        <span>{viewCount} views</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        {isLiked ? (
-                            <FaThumbsUp size={18} className="text-primary-dark cursor-pointer" onClick={() => setIsLiked(false)} />
-                        ) : (
-                            <FaRegThumbsUp size={18} className="text-primary-dark cursor-pointer" onClick={() => setIsLiked(true)} />
-                        )}
-                        <span>{likeCount} likes</span>
                     </div>
                 </div>
             </div>
-
         </div>
     )
 }

@@ -60,7 +60,7 @@ const QueueItem = ({
                 <img src={video.snippet.thumbnails?.default?.url || ''} alt={video.snippet.title} className="w-full h-full object-cover" />
             </div>
             <div className="flex-1 min-w-0">
-                <p className="text-white text-sm font-semibold truncate">{video.snippet.title}</p>
+                <p className="text-white text-sm font-semibold truncate max-w-28">{video.snippet.title}</p>
                 <p className="text-zinc-400 text-xs truncate">{video.snippet.channelTitle} • #{index + 1}</p>
             </div>
             <button onClick={(e) => onRemove(e, videoId)} className="text-red-400 hover:text-red-300">
