@@ -4,16 +4,16 @@ import {useVideo, VideoProvider} from './context/VideoContext';
 import Navbar from './components/Navbar';
 import VideoSection from './components/VideoSection';
 import {Toaster} from 'react-hot-toast';
-// import QueueList from './components/QueueList';
 import CategorySlider from './components/CategorySlider';
 import MusicPlayer from "./components/MusicPlayer.tsx";
-import VideoPlayer from "./components/VideoPlayer.tsx";
+// import VideoPlayer from "./components/VideoPlayer.tsx";
 import QueueList from './components/QueueList.tsx';
+import VideoPlayer from './components/VideoPlayer.tsx';
 
 const queryClient = new QueryClient();
 
 function MainContent() {
-    const {selectedVideo,queue} = useVideo();
+    const {queue} = useVideo();
 
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -44,10 +44,10 @@ function MainContent() {
                     <CategorySlider onCategoryClick={handleCategoryClick}/>
                     <VideoSection searchQuery={searchQuery}/>
                 </div>
-                <div className='min-h-[80px] w-full fixed bottom-0 bg-black bg-opacity-80 backdrop-blur-md z-50 flex items-center justify-between flex-col px-2'>
+                <div className='min-h-[180px] w-full fixed bottom-0 bg-black bg-opacity-80 backdrop-blur-md z-50 flex items-center justify-between flex-col px-2 my-auto'>
                          {queue.length > 0 && <QueueList/>}
                     <MusicPlayer/>
-                        {/*<VideoPlayer/>*/}
+                    {/*    <VideoPlayer/>*/}
 
                 </div>
             </div>

@@ -27,6 +27,12 @@ const VideoPlayer: React.FC = () => {
     const [isSpeedBoost, setIsSpeedBoost] = useState(false)
     const isSpaceHeld = useRef(false)
 
+    const formatTime = (seconds: number) => {
+        const mins = Math.floor(seconds / 60)
+        const secs = Math.floor(seconds % 60)
+        return `${mins}:${secs.toString().padStart(2, '0')}`
+    }
+
     useEffect(() => {
         if (selectedVideo) {
             setPlayed(0)
@@ -40,6 +46,8 @@ const VideoPlayer: React.FC = () => {
     }
 
     const handleSeekChange = (value: number[]) => setPlayed(value[0])
+
+
     const handleSeekMouseDown = () => setSeeking(true)
 
     const handleSeekMouseUp = (value: number[]) => {
@@ -144,22 +152,10 @@ const VideoPlayer: React.FC = () => {
         }
     }, [])
 
-    if (!selectedVideo) {
-        return (
-            <div className="h-full text-white flex items-center justify-center w-full">
-                Select a video to play
-            </div>
-        )
-    }
 
 
-    const videoId = typeof selectedVideo.id === 'string' ? selectedVideo.id : selectedVideo.id.videoId
+    const videoId = typeof selectedVideo?.id === 'string' ? selectedVideo.id : selectedVideo?.id.videoId
 
-    const formatTime = (seconds: number) => {
-        const mins = Math.floor(seconds / 60)
-        const secs = Math.floor(seconds % 60)
-        return `${mins}:${secs.toString().padStart(2, '0')}`
-    }
 
     const ControlButtons = [
         {key: 'previous', icon: <FaStepBackward size={18}/>, onClick: previousVideo},
@@ -169,7 +165,15 @@ const VideoPlayer: React.FC = () => {
         {key: 'next', icon: <FaStepForward size={18}/>, onClick: nextVideo}
     ]
     const url =`https://www.youtube.com/watch?v=${videoId}`
-    console.log("this is thumnail",selectedVideo?.snippet?.thumbnails)
+    // console.log("this is thumnail",selectedVideo)
+
+    if (!selectedVideo) {
+        return (
+            <div className="h-full text-white flex items-center justify-center my-auto text-3xl">
+                Select a video to play
+            </div>
+        )
+    }
     return (
         <div className="bg-zinc-900 rounded-xl overflow-hidden shadow-lg w-full flex" id="player-wrapper">
             <div id="player" className="hidden w-full">
@@ -193,12 +197,14 @@ const VideoPlayer: React.FC = () => {
                 />
             </div>
 
-            <img
-                src={selectedVideo?.snippet?.thumbnails?.medium?.url || cdimag}
-                alt=""
-                className=" bg-black/50  "
-            />
-            <div className="p-6 space-y-3 bg-black/50 shadow-lg min-w-[100vw]">
+
+             <img
+                 src={selectedVideo?.snippet?.thumbnails?.medium?.url || cdimag}
+                 alt=""
+                 className=" bg-black/50  "
+             />
+
+            <div className="p-6 space-y-3 bg-black/50 shadow-lg w-full">
                 <h2 className="text-2xl font-bold text-white">{selectedVideo?.snippet.title}</h2>
                 <Slider.Root
                     className="relative flex items-center w-full h-6 group"
@@ -210,14 +216,14 @@ const VideoPlayer: React.FC = () => {
                     onPointerUp={() => handleSeekMouseUp([played])}
                 >
                     <Slider.Track className="relative w-full h-2 bg-white/30 rounded-full overflow-hidden shadow-inner ">
-                        <Slider.Range className="absolute h-full bg-primary-dark rounded-full animate-[glow_2s_infinite]" />
+                        <Slider.Range className="absolute h-full bg-primary-dark rounded-full " />
                     </Slider.Track>
                 </Slider.Root>
                 <div className="flex justify-between text-sm text-primary-dark">
                     <span>{formatTime(played * duration)}</span>
                     <span>{formatTime(duration)}</span>
                 </div>
-                <div className="flex items-center justify-between  ">
+                <div className="w-full flex items-center justify-between  ">
                     <div className="flex items-center gap-2 text-white ">
                         {ControlButtons.map((button) => (
                             <button
@@ -242,7 +248,7 @@ const VideoPlayer: React.FC = () => {
                             onValueChange={handleVolumeChange}
                         >
                             <Slider.Track className="relative w-full h-2 bg-white/30 rounded-full overflow-hidden shadow-inner ">
-                                <Slider.Range className="absolute h-full bg-primary-dark rounded-full animate-[glow_2s_infinite]" />
+                                <Slider.Range className="absolute h-full bg-primary-dark rounded-full " />
                             </Slider.Track>
                         </Slider.Root>
                     </div>

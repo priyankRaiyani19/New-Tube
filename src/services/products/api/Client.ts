@@ -2,10 +2,10 @@ import axios from "axios";
 
 // 1
 
-// const API_KEY = 'AIzaSyAHWqMYjoeWtPO6TDnjHagPJ2nbe_x7KiI';
+const API_KEY = 'AIzaSyAHWqMYjoeWtPO6TDnjHagPJ2nbe_x7KiI';
 
 // 2
-const API_KEY = 'AIzaSyD3pPfTZ5-TDBc42AQGF52LwZJm2vChins';
+// const API_KEY = 'AIzaSyD3pPfTZ5-TDBc42AQGF52LwZJm2vChins';
 
 const BASE_URL = 'https://www.googleapis.com/youtube/v3';
 

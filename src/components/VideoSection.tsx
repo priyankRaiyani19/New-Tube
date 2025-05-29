@@ -90,7 +90,7 @@ const VideoSection: React.FC<{ searchQuery: string }> = ({searchQuery}) => {
                     ))}
                 </div>
             ) : videos.length > 0 ? (
-                <div className="flex flex-wrap gap-4 justify-between">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-between">
                     {videos.map((video) => (
                         <VideoCard
                             key={typeof video.id === 'string' ? video.id : video.id.videoId}

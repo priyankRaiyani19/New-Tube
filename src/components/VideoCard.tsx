@@ -60,7 +60,7 @@ const VideoCard = ({ video }: { video: Video }) => {
 
     return (
         <div
-            className="group relative w-[480px] h-[180px] rounded-3xl border border-white/10 bg-gradient-to-br from-[#1f1f1f]/60 to-[#0f0f0f]/60 backdrop-blur-lg p-5 shadow-md hover:shadow-xl hover:scale-[1.025] transition-all duration-300 cursor-pointer"
+            className="group relative  h-[180px] rounded-3xl border border-white/10 bg-gradient-to-br from-[#1f1f1f]/60 to-[#0f0f0f]/60 backdrop-blur-lg p-5 shadow-md hover:shadow-xl hover:scale-[1.025] transition-all duration-300 cursor-pointer"
             onClick={handleClick}
         >
             <div className="flex flex-col sm:flex-row gap-5 h-full">
